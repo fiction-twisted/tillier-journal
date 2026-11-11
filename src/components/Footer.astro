@@ -1,0 +1,69 @@
+---
+import Logo from '../assets/tillier-logo.svg';
+---
+
+<footer id="subscribe" class="footer">
+  <div class="footer-cta">
+    <p class="label kicker">Correspondence</p>
+    <h2 class="footer-title" data-reveal="lines">Commissions, collaborations &amp; correspondence</h2>
+    <p class="label footer-contact">Contact details to come</p>
+  </div>
+  <dl class="colophon label">
+    <div><dt>Editor-in-chief</dt><dd>Sigve Tillier</dd></div>
+    <div><dt>Art direction</dt><dd>Sigve Tillier</dd></div>
+    <div><dt>Typeset in</dt><dd>Bebas Neue, IvyJournal &amp; Century Gothic</dd></div>
+    <div><dt>Printed on</dt><dd>Astro &amp; Sanity</dd></div>
+  </dl>
+  <div class="footer-logo" aria-hidden="true"><Logo /></div>
+</footer>
+
+<style>
+  /* Dark, for contrast at the end of the issue */
+  .footer {
+    margin-top: 160px;
+    padding: 72px var(--gutter) var(--gutter);
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .kicker {
+    margin-bottom: 18px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .footer-title {
+    max-width: 12em;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(56px, 8vw, 128px);
+    line-height: 0.9;
+    letter-spacing: 0.005em;
+  }
+  .footer-contact {
+    margin-top: 28px;
+    color: rgb(246 243 238 / 0.6);
+  }
+  .colophon {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+    margin: 96px 0 48px;
+    padding-top: 16px;
+    border-top: 1px solid rgb(246 243 238 / 0.25);
+  }
+  .colophon dt {
+    color: rgb(246 243 238 / 0.55);
+    margin-bottom: 6px;
+  }
+  .colophon dd {
+    margin: 0;
+  }
+  .footer-logo {
+    color: var(--paper);
+  }
+
+  @media (max-width: 800px) {
+    .colophon {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

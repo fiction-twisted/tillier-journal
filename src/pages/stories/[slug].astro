@@ -1,0 +1,264 @@
+---
+// A story (project) page. Each story borrows its client's typefaces and
+// colours (story.theme), while the magazine frame — header, labels, footer —
+// stays Tillier Journal.
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import Footer from '../../components/Footer.astro';
+import StoryBlock from '../../components/StoryBlock.astro';
+import { allStories, storyHref, type Story } from '../../data/issue';
+
+export function getStaticPaths() {
+  return allStories.filter((s) => s.blocks).map((story) => ({ params: { slug: story.slug }, props: { story } }));
+}
+
+const { story } = Astro.props as { story: Story };
+const next = allStories[(allStories.indexOf(story) + 1) % allStories.length];
+
+const theme = story.theme;
+const themeVars = theme
+  ? [
+      ...Object.entries(theme.colors).map(([k, v]) => `--c-${k}:${v}`),
+      `--s-accent:${theme.accent}`,
+      theme.headingFont && `--s-heading:${theme.headingFont}`,
+      theme.bodyFont && `--s-body:${theme.bodyFont}`,
+    ]
+      .filter(Boolean)
+      .join(';')
+  : '';
+---
+
+<Base title={`${story.title} — Tillier Journal`} description={story.standfirst}>
+  <SiteHeader />
+
+  <article class="story" style={themeVars}>
+    <header class="story-head">
+      <p class="label kicker">{story.section} <span>·</span> p. {story.page}</p>
+      <h1 class="story-title" data-reveal="lines">{story.title}</h1>
+      <p class="standfirst" data-reveal="fade">{story.standfirst}</p>
+      <p class="label byline" data-reveal="fade">Words &amp; design by Sigve Tillier</p>
+    </header>
+
+    {
+      story.hero && (
+        <div class="story-hero" data-reveal="image">
+          <div class="img-inner">
+            <Image src={story.hero.src} alt={story.hero.alt} widths={[960, 1600, 2400]} sizes="100vw" loading="eager" />
+          </div>
+        </div>
+      )
+    }
+
+    <section class="story-intro">
+      {
+        story.details && (
+          <aside class="details label" aria-label="The details">
+            <p class="details-heading">The details</p>
+            <dl>
+              {story.details.map((d) => (
+                <div>
+                  <dt>{d.label}</dt>
+                  <dd>{d.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </aside>
+        )
+      }
+      <div class="intro-text" data-reveal="fade">
+        {story.intro?.map((p, i) => <p class:list={{ dropcap: i === 0 }}>{p}</p>)}
+      </div>
+    </section>
+
+    <div class="blocks">
+      {story.blocks?.map((block) => <StoryBlock block={block} colors={theme?.colors} />)}
+    </div>
+
+    <footer class="story-end">
+      {
+        story.credits && (
+          <dl class="credits label">
+            {story.credits.map((c) => (
+              <div>
+                <dt>{c.label}</dt>
+                <dd>{c.value}</dd>
+              </div>
+            ))}
+          </dl>
+        )
+      }
+      <a class="continued" href={storyHref(next)}>
+        <span class="label">Continued on p. {next.page}</span>
+        <span class="continued-title">{next.title}</span>
+        <span class="label continued-client">{next.client}</span>
+      </a>
+    </footer>
+  </article>
+
+  <Footer />
+</Base>
+
+<style>
+  .story {
+    --s-accent: var(--accent);
+    --s-heading: var(--font-display);
+    --s-body: var(--font-serif);
+  }
+
+  .story-head {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: calc(var(--header-h) + 96px) var(--gutter) 72px;
+    text-align: center;
+  }
+  /* The magazine frame keeps Tillier Journal's gold, not the story's colour */
+  .kicker {
+    margin-bottom: 28px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .story-title {
+    font-family: var(--s-heading);
+    font-weight: 500;
+    font-size: clamp(56px, 9vw, 152px);
+    line-height: 0.92;
+    letter-spacing: -0.035em;
+  }
+  .standfirst {
+    max-width: 30em;
+    margin: 32px auto 0;
+    font-family: var(--s-body);
+    font-size: clamp(20px, 1.8vw, 26px);
+    line-height: 1.4;
+    color: var(--ink-soft);
+  }
+  .byline {
+    margin-top: 28px;
+  }
+
+  /* Shown whole, never cropped: key visuals often carry type at the edges */
+  .story-hero {
+    overflow: hidden;
+  }
+  .story-hero :global(img) {
+    width: 100%;
+    height: auto;
+  }
+
+  /* Details beside the opening text, like a feature's fact box */
+  .story-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: calc(var(--gutter) * 2);
+    max-width: 1400px;
+    margin: 120px auto 0;
+    padding: 0 var(--gutter);
+    align-items: start;
+  }
+  .details {
+    position: sticky;
+    top: calc(var(--header-h) + 32px);
+    border-top: 3px solid var(--ink);
+    padding-top: 14px;
+  }
+  .details-heading {
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  .details div {
+    padding: 12px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .details dt {
+    color: var(--ink-soft);
+    margin-bottom: 4px;
+  }
+  .details dd {
+    margin: 0;
+    color: var(--ink);
+  }
+  .intro-text {
+    display: grid;
+    gap: 1.1em;
+    max-width: 36em;
+    font-family: var(--s-body);
+    font-size: clamp(19px, 1.5vw, 22px);
+    line-height: 1.55;
+  }
+  .dropcap::first-letter {
+    float: left;
+    font-family: var(--s-heading);
+    font-weight: 500;
+    font-size: 4.6em;
+    line-height: 0.8;
+    padding: 0.05em 0.08em 0 0;
+    color: var(--s-accent);
+  }
+
+  .blocks {
+    display: grid;
+    gap: clamp(16px, 2vw, 28px);
+    margin-top: 140px;
+  }
+
+  .story-end {
+    max-width: 1400px;
+    margin: 140px auto 0;
+    padding: 0 var(--gutter);
+  }
+  .credits {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule);
+  }
+  .credits dt {
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+  .credits dd {
+    margin: 0;
+  }
+  .continued {
+    display: grid;
+    gap: 10px;
+    margin-top: 96px;
+    padding-top: 28px;
+    border-top: 6px solid var(--ink);
+  }
+  .continued-title {
+    font-family: var(--font-display);
+    font-size: clamp(56px, 8vw, 128px);
+    line-height: 0.9;
+    transition: color 0.4s var(--ease);
+  }
+  .continued:hover .continued-title {
+    color: var(--accent);
+  }
+  .continued-client {
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 800px) {
+    .story-head {
+      padding-top: calc(var(--header-h) + 56px);
+    }
+    .story-intro {
+      grid-template-columns: minmax(0, 1fr);
+      margin-top: 72px;
+    }
+    .details {
+      position: static;
+    }
+    .blocks {
+      margin-top: 96px;
+    }
+  }
+</style>
+
+<script>
+  import { initMotion } from '../../scripts/motion';
+  initMotion();
+</script>

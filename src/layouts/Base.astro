@@ -1,0 +1,30 @@
+---
+import '@fontsource/bebas-neue/latin.css';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** 'white' for the front page; story pages keep the warm paper tone */
+  tone?: 'paper' | 'white';
+}
+
+const {
+  title = 'Tillier Journal',
+  description = 'The portfolio of Sigve Tillier, art director and designer in Bergen.',
+  tone = 'paper',
+} = Astro.props;
+---
+
+<html lang="en" class:list={{ 'tone-white': tone === 'white' }}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

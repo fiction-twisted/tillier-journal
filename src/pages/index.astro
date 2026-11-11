@@ -1,0 +1,701 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import Footer from '../components/Footer.astro';
+import { Image } from 'astro:assets';
+import Logo from '../assets/tillier-logo.svg';
+import paperCover from '../assets/covers/ego-dummy-101.jpg'; // placeholder until the Tillier Journal cover exists
+import { issue, coverStory, stories, allStories, storyHref } from '../data/issue';
+
+const contents = allStories;
+const coverImage = coverStory.coverImage ?? coverStory.hero;
+const [lead, ...rest] = stories;
+// Only list sections that actually have a story in this issue.
+const sections = [...new Set(contents.map((s) => s.section))];
+---
+
+<Base tone="white">
+  <SiteHeader masthead />
+
+  <section class="masthead" aria-label="Masthead">
+    <div class="masthead-meta label">
+      <span>Issue No. {issue.number}</span>
+      <span>{issue.season}</span>
+      <span>{issue.city}, Norway</span>
+    </div>
+    <div class="masthead-space" aria-hidden="true"></div>
+    <h1 class="sr-only">Tillier Journal — the portfolio of Sigve Tillier</h1>
+  </section>
+
+  <nav class="section-bar label" aria-label="Sections">
+    <div class="section-bar-inner">
+      <a href="#contents" data-section="all" aria-current="true">All stories</a>
+      {sections.map((s) => <a href="#contents" data-section={s}>{s}</a>)}
+    </div>
+  </nav>
+
+  <main>
+    <!-- Cover story -->
+    <article class="cover">
+      <div class="cover-image" data-reveal="image" style={`--tone:${coverStory.tone}`}>
+        <div class="img-inner" data-parallax>
+          {
+            coverImage ? (
+              <Image src={coverImage.src} alt={coverImage.alt} widths={[960, 1600, 2400]} sizes="96vw" loading="eager" />
+            ) : (
+              <span class="label img-label">{coverStory.imageLabel}</span>
+            )
+          }
+        </div>
+      </div>
+      <a class="cover-card" href={storyHref(coverStory)}>
+        <p class="label kicker">Cover story <span>·</span> {coverStory.section}</p>
+        <h2 class="cover-title" data-reveal="lines">{coverStory.title}</h2>
+        <p class="standfirst" data-reveal="fade">{coverStory.standfirst}</p>
+        <p class="label byline" data-reveal="fade">
+          By Sigve Tillier <span>—</span> p. {coverStory.page}
+        </p>
+        <span class="label read-more">Read the story →</span>
+      </a>
+    </article>
+
+    <!-- Contents -->
+    <section id="contents" class="contents">
+      <h2 class="contents-heading" data-reveal="lines"><em>In this</em> issue</h2>
+      <ol class="contents-list">
+        {
+          contents.map((s) => (
+            <li data-reveal="fade" data-section={s.section}>
+              <a href={storyHref(s)}>
+                <span class="label">{s.section}</span>
+                <span class="contents-title">{s.title}</span>
+                <span class="label contents-client">{s.client}</span>
+                <span class="contents-page">{String(s.page).padStart(2, '0')}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <!-- Stories -->
+    <section class="stories">
+      <article class="story story--lead" id={lead.slug}>
+        <div class="story-image" data-reveal="image" style={`--tone:${lead.tone}`}>
+          <div class="img-inner"><span class="label img-label">{lead.imageLabel}</span></div>
+        </div>
+        <p class="label kicker">{lead.section}</p>
+        <h3 class="story-title" data-reveal="lines">{lead.title}</h3>
+        <p class="standfirst" data-reveal="fade">{lead.standfirst}</p>
+        <p class="label byline">{lead.client} <span>—</span> {lead.year}</p>
+      </article>
+      <div class="story-stack">
+        {
+          rest.map((s) => (
+            <article class="story" id={s.slug}>
+              <div class="story-image" data-reveal="image" style={`--tone:${s.tone}`}>
+                <div class="img-inner">
+                  <span class="label img-label">{s.imageLabel}</span>
+                </div>
+              </div>
+              <p class="label kicker">{s.section}</p>
+              <h3 class="story-title" data-reveal="lines">{s.title}</h3>
+              <p class="standfirst" data-reveal="fade">{s.standfirst}</p>
+              <p class="label byline">{s.client} <span>—</span> {s.year}</p>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- Faux advertisement -->
+    <aside class="ad" aria-label="Advertisement">
+      <p class="label ad-flag">Advertisement</p>
+      <div class="ad-body">
+        <div class="bottle" data-reveal="fade" aria-hidden="true">
+          <span class="bottle-cap"></span>
+          <span class="bottle-glass"><Logo /></span>
+        </div>
+        <div class="ad-copy">
+          <h2 class="ad-title" data-reveal="lines">Eau de Journal</h2>
+          <p class="ad-tagline" data-reveal="fade"><em>For those who read between the lines.</em></p>
+          <p class="label ad-small" data-reveal="fade">Tillier — Bergen</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Letter from the editor -->
+    <section id="editor" class="editor">
+      <div class="editor-portrait" data-reveal="image" style="--tone:#c9c2b6">
+        <div class="img-inner"><span class="label img-label">Portrait</span></div>
+      </div>
+      <div class="editor-text">
+        <p class="label kicker">Letter from the editor</p>
+        <h2 class="editor-title" data-reveal="lines">Welcome to the first issue</h2>
+        <div class="editor-body" data-reveal="fade">
+          <p class="dropcap">
+            This is placeholder copy for the editor's letter, a short, personal introduction in
+            Sigve's own voice. It will say who he is, what he makes and what he cares about: art
+            direction, identities, editorial design and motion, made in Bergen.
+          </p>
+          <p>
+            The stories in this issue are projects. Each opens like a feature, with a headline,
+            a standfirst and the work itself given room to breathe.
+          </p>
+        </div>
+        <p class="signature">Sigve Tillier</p>
+        <p class="label">Editor-in-chief &amp; art director</p>
+      </div>
+    </section>
+
+    <!-- Paper edition: the magazine advertising itself -->
+    <aside id="paper" class="paper" aria-label="The paper edition">
+      <div class="paper-covers">
+        <div class="paper-stack" data-reveal="fade">
+          <div class="paper-back paper-back--2" aria-hidden="true"><Logo /></div>
+          <div class="paper-back paper-back--1" aria-hidden="true"><Logo /></div>
+          <Image
+            src={paperCover}
+            alt="Placeholder cover for the paper edition"
+            class="paper-front"
+            widths={[360, 720]}
+            sizes="(max-width: 800px) 60vw, 26vw"
+          />
+        </div>
+      </div>
+      <div class="paper-offer">
+        <p class="label kicker">The paper edition</p>
+        <h2 class="paper-title" data-reveal="lines">Become a Tillier Journal subscriber</h2>
+        <p class="paper-price" data-reveal="fade">
+          <s>kr 59</s> <strong>kr 0</strong> <span>/ forever</span>
+        </p>
+        <ul class="paper-perks" data-reveal="fade">
+          <li>Starting issue: No. {issue.number}</li>
+          <li>One designer, undivided attention</li>
+          <li>Full access to the archive</li>
+          <li>Replies within two working days</li>
+        </ul>
+        <p class="label paper-gift">Free gift included — a CV, in print or PDF</p>
+        <a href="#subscribe" class="label paper-button">Subscribe now</a>
+      </div>
+    </aside>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .section-bar a {
+    position: relative;
+  }
+  .section-bar a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -4px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.5s var(--ease);
+  }
+  .section-bar a:hover::after,
+  .section-bar a[aria-current='true']::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  /* GQ-style display headlines */
+  .cover-title,
+  .story-title,
+  .contents-heading,
+  .contents-title,
+  .paper-title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    line-height: 0.9;
+    letter-spacing: 0.005em;
+  }
+  /* :global because the reveal script rebuilds the heading's words at runtime */
+  .contents-heading :global(em) {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: 0.82em;
+    letter-spacing: -0.01em;
+    text-transform: lowercase;
+  }
+
+  .masthead {
+    padding: calc(var(--header-h) + 16px) var(--gutter) 0;
+  }
+  .masthead-meta {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--ink);
+  }
+  .masthead-space {
+    height: calc(min(92vw, 1400px) * 0.295 + 56px);
+  }
+
+  /* Sticks under the header; hides while scrolling down, returns on scroll up */
+  .section-bar {
+    position: sticky;
+    top: var(--header-h);
+    z-index: 19;
+    padding: 0 var(--gutter);
+    background: var(--paper);
+    transition: transform 0.6s var(--ease);
+  }
+  .section-bar.is-hidden {
+    transform: translateY(-100%);
+  }
+  .section-bar-inner {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px 40px;
+    padding: 16px 0;
+    border-top: 3px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+  }
+  .section-bar a {
+    font-weight: 700;
+  }
+
+  /* Placeholder imagery */
+  .cover-image,
+  .story-image,
+  .editor-portrait {
+    position: relative;
+    overflow: hidden;
+    background: var(--tone);
+  }
+  .img-inner {
+    position: absolute;
+    inset: -8% 0;
+    background:
+      radial-gradient(120% 80% at 70% 20%, rgb(255 255 255 / 0.12), transparent 60%),
+      var(--tone);
+  }
+  .img-label {
+    position: absolute;
+    left: 20px;
+    top: calc(8% + 18px);
+    color: rgb(255 255 255 / 0.7);
+  }
+
+  /* Cover story */
+  .cover {
+    position: relative;
+    margin: 48px var(--gutter) 0;
+  }
+  .cover-image {
+    height: min(88vh, 900px);
+  }
+  .cover-card {
+    position: relative;
+    width: min(620px, 100%);
+    margin: -180px auto 0;
+    padding: 40px 48px 36px;
+    background: var(--paper);
+    text-align: center;
+  }
+  .kicker {
+    margin-bottom: 18px;
+    font-weight: 700;
+  }
+  .cover .kicker {
+    color: var(--accent);
+  }
+  .cover-title {
+    font-size: clamp(72px, 10vw, 160px);
+  }
+  .standfirst {
+    margin-top: 20px;
+    font-size: 20px;
+    line-height: 1.45;
+    color: var(--ink-soft);
+  }
+  .byline {
+    margin-top: 22px;
+  }
+  .img-inner :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .cover-card {
+    display: block;
+  }
+  .read-more {
+    display: inline-block;
+    margin-top: 22px;
+    font-weight: 700;
+    color: var(--accent);
+    transition: transform 0.5s var(--ease);
+  }
+  .cover-card:hover .read-more {
+    transform: translateX(6px);
+  }
+
+  /* Contents */
+  .contents {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: var(--gutter);
+    margin: 140px var(--gutter) 0;
+    padding-top: 28px;
+    border-top: 6px solid var(--ink);
+  }
+  .contents-heading {
+    font-size: clamp(56px, 7vw, 112px);
+  }
+  /* Dim the link, not the li: the li's opacity belongs to the reveal animation */
+  .contents-list li > a {
+    transition:
+      opacity 0.5s var(--ease),
+      padding 0.6s var(--ease);
+  }
+  .contents-list li.is-dimmed > a {
+    opacity: 0.2;
+  }
+  .contents-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .contents-list a {
+    display: grid;
+    grid-template-columns: 120px minmax(0, 1fr) 48px;
+    align-items: baseline;
+    gap: 8px 20px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .contents-list a:hover {
+    padding-left: 14px;
+  }
+  .contents-title {
+    grid-column: 2;
+    font-size: clamp(32px, 3.4vw, 52px);
+  }
+  /* Client sits under the headline like a byline, so long names never collide */
+  .contents-client {
+    grid-column: 2;
+    grid-row: 2;
+    color: var(--ink-soft);
+  }
+  .contents-page {
+    grid-column: 3;
+    grid-row: 1;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    text-align: right;
+  }
+
+  /* Stories */
+  .stories {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 64px var(--gutter);
+    margin: 140px var(--gutter) 0;
+  }
+  .story-stack {
+    display: grid;
+    gap: 64px;
+    align-content: start;
+  }
+  .story-image {
+    aspect-ratio: 4 / 5;
+    margin-bottom: 22px;
+  }
+  .story-stack .story-image {
+    aspect-ratio: 3 / 2;
+  }
+  .story-image .img-inner {
+    transition: transform 1.4s var(--ease);
+  }
+  .story:hover .story-image .img-inner {
+    transform: scale(1.04);
+  }
+  .story .kicker {
+    margin-bottom: 10px;
+  }
+  .story-title {
+    font-size: clamp(44px, 4.8vw, 76px);
+  }
+  .story--lead .story-title {
+    font-size: clamp(56px, 7vw, 112px);
+  }
+  .story .standfirst {
+    margin-top: 14px;
+    max-width: 34em;
+  }
+  .story .byline {
+    margin-top: 16px;
+    color: var(--ink-soft);
+  }
+
+  /* Faux ad */
+  .ad {
+    margin-top: 160px;
+    background: #0e0e0e;
+    color: var(--paper);
+    padding: 28px var(--gutter) 120px;
+  }
+  .ad-flag {
+    text-align: center;
+    color: rgb(246 243 238 / 0.5);
+  }
+  .ad-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--gutter);
+    max-width: 1100px;
+    margin: 96px auto 0;
+  }
+  .bottle {
+    justify-self: center;
+    display: grid;
+    justify-items: center;
+  }
+  .bottle-cap {
+    width: 64px;
+    height: 34px;
+    border-radius: 999px;
+    background: var(--accent);
+  }
+  .bottle-glass {
+    width: 220px;
+    height: 300px;
+    margin-top: 6px;
+    display: grid;
+    place-items: center;
+    padding: 0 34px;
+    border: 1px solid rgb(246 243 238 / 0.35);
+    background: linear-gradient(160deg, rgb(255 255 255 / 0.08), rgb(255 255 255 / 0.01));
+    color: var(--paper);
+  }
+  .ad-title {
+    font-size: clamp(56px, 7vw, 112px);
+    font-style: italic;
+  }
+  .ad-tagline {
+    margin-top: 18px;
+    font-size: 22px;
+    color: rgb(246 243 238 / 0.75);
+  }
+  .ad-small {
+    margin-top: 40px;
+    color: var(--accent);
+  }
+
+  /* Editor */
+  .editor {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: calc(var(--gutter) * 2);
+    margin: 160px var(--gutter) 0;
+    align-items: start;
+  }
+  .editor-portrait {
+    aspect-ratio: 4 / 5;
+  }
+  .editor-portrait .img-label {
+    color: rgb(17 17 17 / 0.55);
+  }
+  .editor-title {
+    font-size: clamp(40px, 4.4vw, 68px);
+  }
+  .editor-body {
+    margin-top: 32px;
+    max-width: 36em;
+    display: grid;
+    gap: 1em;
+    font-size: 19px;
+  }
+  .dropcap::first-letter {
+    float: left;
+    font-size: 5.2em;
+    line-height: 0.82;
+    padding: 0.06em 0.1em 0 0;
+    font-weight: 300;
+  }
+  .signature {
+    margin-top: 40px;
+    font-size: 32px;
+    font-style: italic;
+  }
+
+  /* Paper edition — full-bleed split: covers on paper, offer on ink */
+  .paper {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    min-height: min(90vh, 860px);
+    margin-top: 160px;
+    border-top: 1px solid var(--ink);
+  }
+  .paper-covers {
+    display: grid;
+    place-items: center;
+    padding: 96px var(--gutter);
+  }
+  .paper-stack {
+    position: relative;
+    width: min(30vw, 400px);
+    aspect-ratio: 6667 / 9063;
+  }
+  /* A neat pile of back issues, not a fan */
+  .paper-front,
+  .paper-back {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0 24px 48px rgb(17 17 17 / 0.18);
+  }
+  .paper-front {
+    object-fit: cover;
+  }
+  .paper-back {
+    display: grid;
+    align-items: start;
+    padding: 9% 10%;
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .paper-back--1 {
+    transform: translate(4%, -3%);
+  }
+  .paper-back--2 {
+    transform: translate(8%, -6%);
+    background: var(--accent);
+    color: var(--ink);
+  }
+  .paper-offer {
+    display: grid;
+    align-content: center;
+    padding: 96px clamp(28px, 6vw, 96px);
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .paper-offer > * {
+    max-width: 520px;
+  }
+  .paper-offer .kicker {
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+  .paper-title {
+    font-size: clamp(48px, 5vw, 80px);
+  }
+  .paper-price {
+    margin-top: 40px;
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    font-family: var(--font-sans);
+    font-size: 15px;
+  }
+  .paper-price s {
+    color: rgb(246 243 238 / 0.5);
+  }
+  .paper-price strong {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 72px;
+    line-height: 0.8;
+  }
+  .paper-perks {
+    list-style: none;
+    margin: 40px 0 0;
+    padding: 0;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    letter-spacing: 0.04em;
+  }
+  .paper-perks li {
+    padding: 14px 0;
+    border-top: 1px solid rgb(246 243 238 / 0.18);
+  }
+  .paper-perks li:last-child {
+    border-bottom: 1px solid rgb(246 243 238 / 0.18);
+  }
+  .paper-perks li::before {
+    content: '✓';
+    margin-right: 16px;
+    color: var(--accent);
+  }
+  .paper-gift {
+    margin-top: 40px;
+    color: rgb(246 243 238 / 0.7);
+  }
+  .paper-button {
+    justify-self: start;
+    margin-top: 20px;
+    padding: 18px 36px;
+    background: var(--accent);
+    color: var(--ink);
+    font-weight: 700;
+    transition: background 0.4s var(--ease);
+  }
+  .paper-button:hover {
+    background: var(--paper);
+  }
+
+  @media (max-width: 800px) {
+    .masthead-meta span:nth-child(3) {
+      display: none;
+    }
+    .section-bar-inner {
+      gap: 10px 22px;
+    }
+    .cover-image {
+      height: 70vh;
+    }
+    .cover-card {
+      margin-top: -80px;
+      width: calc(100% - 24px);
+      padding: 28px 20px;
+    }
+    .contents,
+    .stories,
+    .ad-body,
+    .editor,
+    .paper {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .paper-stack {
+      width: 62vw;
+    }
+    .paper-covers {
+      padding: 56px 24px 72px;
+    }
+    .contents-list a {
+      grid-template-columns: minmax(0, 1fr) 36px;
+      gap: 4px 12px;
+    }
+    .contents-list a > .label:first-child,
+    .contents-title,
+    .contents-client {
+      grid-column: 1;
+      grid-row: auto;
+    }
+    .contents-page {
+      grid-row: 1 / span 3;
+      grid-column: 2;
+    }
+    .bottle-glass {
+      width: 170px;
+      height: 230px;
+    }
+  }
+</style>
+
+<script>
+  import { initMotion } from '../scripts/motion';
+  initMotion();
+</script>

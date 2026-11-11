@@ -1,0 +1,104 @@
+/* Tillier Journal — base tokens.
+   Fonts: Bebas Neue (headlines, self-hosted), IvyJournal (body, standfirsts)
+   and Century Gothic Pro (labels, UI).
+   Locally they resolve from the Adobe Fonts activated on this Mac; in
+   production they will come from an Adobe Fonts web project. */
+
+:root {
+  --paper: #f6f3ee;
+  --ink: #111111;
+  --ink-soft: #55524c;
+  --rule: #d9d4cb;
+  --accent: #b08d4a; /* gold, used sparingly */
+
+  --font-sans: 'century-gothic-pro', 'Century Gothic Pro', 'Century Gothic', 'Avenir Next', sans-serif;
+  --font-serif: 'ivyjournal', 'IvyJournal', 'Iowan Old Style', Georgia, serif;
+  --font-display: 'Bebas Neue', 'DIN Condensed', Impact, sans-serif; /* GQ-style headlines */
+
+  --gutter: clamp(16px, 3vw, 40px);
+  --header-h: 64px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Front page: pure white instead of paper */
+.tone-white {
+  --paper: #ffffff;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: 18px;
+  line-height: 1.55;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-weight: 300;
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+}
+
+p {
+  margin: 0;
+}
+
+/* Small tracked caps: kickers, nav, credits */
+.label {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+.rule {
+  border: 0;
+  border-top: 1px solid var(--ink);
+  margin: 0;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,373 @@
+---
+// Renders one module of a story. Module types mirror the future Sanity
+// "blocks" array: full, pair, trio, feature, site, text, quote.
+import type { Block } from '../data/types';
+import Figure from './Figure.astro';
+
+interface Props {
+  block: Block;
+  /** the story's theme colours, for the palette module */
+  colors?: Record<string, string>;
+}
+
+const { block, colors = {} } = Astro.props;
+
+// Dark or light label on a colour field, by relative luminance
+const isDark = (hex: string) => {
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b < 0.55;
+};
+---
+
+{
+  block.type === 'full' && (
+    <div class:list={['block', 'block-full', { bleed: block.bleed }]}>
+      <Figure figure={block.figure} sizes={block.bleed ? '100vw' : '96vw'} />
+    </div>
+  )
+}
+
+{
+  block.type === 'pair' && (
+    <div class="block block-grid block-pair">
+      {block.figures.map((f) => (
+        <Figure figure={f} ratio="4 / 3" sizes="(max-width: 800px) 96vw, 48vw" />
+      ))}
+    </div>
+  )
+}
+
+{
+  block.type === 'trio' && (
+    <div class="block block-grid block-trio">
+      {block.figures.map((f) => (
+        <Figure figure={f} ratio="4 / 5" sizes="(max-width: 800px) 96vw, 32vw" />
+      ))}
+    </div>
+  )
+}
+
+{
+  block.type === 'feature' && (
+    <div class:list={['block', 'block-grid', 'block-feature', { flip: block.flip }]}>
+      <Figure figure={block.large} ratio="16 / 10" sizes="(max-width: 800px) 96vw, 64vw" />
+      <Figure figure={block.small} ratio="4 / 5" sizes="(max-width: 800px) 96vw, 32vw" />
+    </div>
+  )
+}
+
+{
+  block.type === 'site' && (
+    <div class="block block-site">
+      <div class="site-frame" data-reveal="fade">
+        <div class="site-bar label">
+          <span class="site-dots" aria-hidden="true">
+            <i />
+            <i />
+            <i />
+          </span>
+          <span class="site-url">{block.label}</span>
+          <a href={block.url} target="_blank" rel="noopener">
+            Open ↗
+          </a>
+        </div>
+        <div class="site-viewport" data-site-viewport>
+          <iframe src={block.url} title={`Live website: ${block.label}`} loading="lazy" />
+        </div>
+      </div>
+      <p class="label site-note">The live site — scroll inside the window</p>
+    </div>
+  )
+}
+
+{
+  block.type === 'text' && (
+    <div class="block block-text" data-reveal="fade">
+      {block.kicker && <p class="label text-kicker">{block.kicker}</p>}
+      {block.paragraphs.map((p) => (
+        <p>{p}</p>
+      ))}
+    </div>
+  )
+}
+
+{
+  block.type === 'quote' && (
+    <blockquote class="block block-quote">
+      <p data-reveal="lines">{block.text}</p>
+    </blockquote>
+  )
+}
+
+{
+  block.type === 'typefaces' && (
+    <div class="block block-type">
+      {block.faces.map((f) => (
+        <div class="face" data-reveal="fade">
+          <p class="label face-meta">
+            <span>{f.name}</span>
+            <span>{f.role}</span>
+          </p>
+          <p
+            class="face-glyphs"
+            style={`font-family:${f.family};font-weight:${f.weight ?? 400};font-style:${f.italic ? 'italic' : 'normal'}`}
+          >
+            Aa
+          </p>
+          <p class="face-sample" style={`font-family:${f.family};font-weight:${f.weight ?? 400}`}>
+            {f.sample}
+          </p>
+          <p class="face-set" style={`font-family:${f.family}`}>
+            ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ
+            <br />
+            abcdefghijklmnopqrstuvwxyzæøå 0123456789
+          </p>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+{
+  block.type === 'palette' && (
+    <div class="block bleed block-palette">
+      {block.colors.map((name) => {
+        const hex = colors[name] ?? '#000000';
+        return (
+          <div class:list={['swatch', { dark: isDark(hex) }]} style={`background:${hex}`} data-swatch>
+            <span class="label">{name}</span>
+            <span class="label">{hex.toUpperCase()}</span>
+          </div>
+        );
+      })}
+    </div>
+  )
+}
+
+<style>
+  .block {
+    padding: 0 var(--gutter);
+  }
+  .block.bleed {
+    padding: 0;
+  }
+  .block-grid {
+    display: grid;
+    gap: clamp(16px, 2vw, 28px);
+    align-items: end;
+  }
+  .block-pair {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .block-trio {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .block-feature {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  }
+  .block-feature.flip {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  }
+  .block-feature.flip > :global(:first-child) {
+    order: 2;
+  }
+
+  /* Live website in a quiet browser frame */
+  .block-site {
+    margin: clamp(56px, 8vw, 120px) 0;
+  }
+  .site-frame {
+    max-width: 1400px;
+    margin: 0 auto;
+    border: 1px solid var(--ink);
+    background: var(--ink);
+  }
+  .site-bar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    height: 44px;
+    padding: 0 16px;
+    color: var(--paper);
+  }
+  .site-dots {
+    display: flex;
+    gap: 6px;
+  }
+  .site-dots i {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    border: 1px solid rgb(246 243 238 / 0.5);
+  }
+  .site-url {
+    color: rgb(246 243 238 / 0.75);
+  }
+  .site-bar a {
+    justify-self: end;
+    color: var(--accent);
+  }
+  /* The site renders at a true desktop width (1440px) and is scaled to fit,
+     so it shows its desktop layout rather than the tablet breakpoint. */
+  .site-viewport {
+    --site-w: 1440px;
+    --s: 1;
+    position: relative;
+    height: min(82vh, 860px);
+    overflow: hidden;
+    background: #fff;
+  }
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--site-w);
+    height: calc(100% / var(--s));
+    border: 0;
+    transform: scale(var(--s));
+    transform-origin: 0 0;
+  }
+  .site-note {
+    margin-top: 14px;
+    text-align: center;
+    color: var(--ink-soft);
+  }
+
+  .block-text {
+    max-width: calc(36em + var(--gutter) * 2);
+    margin: clamp(48px, 7vw, 100px) auto;
+    display: grid;
+    gap: 1em;
+    font-family: var(--s-body);
+    font-size: clamp(19px, 1.5vw, 22px);
+    line-height: 1.55;
+  }
+  /* Labels are the magazine's voice: gold, like the rest of the frame */
+  .text-kicker {
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .block-quote {
+    margin: clamp(64px, 10vw, 160px) auto;
+    max-width: 22em;
+    text-align: center;
+    font-family: var(--s-heading);
+    font-weight: 500;
+    font-size: clamp(32px, 4.2vw, 64px);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: var(--s-accent);
+  }
+
+  /* Typefaces, set live rather than shown as a specimen sheet */
+  .block-type {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(16px, 2vw, 28px);
+    margin: clamp(48px, 7vw, 100px) 0;
+  }
+  .face {
+    padding-top: 14px;
+    border-top: 3px solid var(--ink);
+  }
+  .face-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .face-meta span:first-child {
+    font-weight: 700;
+  }
+  .face-meta span:last-child {
+    color: var(--ink-soft);
+    text-align: right;
+  }
+  .face-glyphs {
+    margin-top: 24px;
+    font-size: clamp(120px, 16vw, 260px);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    color: var(--s-accent);
+  }
+  .face-sample {
+    margin-top: 24px;
+    font-size: clamp(24px, 2.4vw, 36px);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+  .face-set {
+    margin-top: 20px;
+    font-size: 15px;
+    line-height: 1.6;
+    letter-spacing: 0.02em;
+    color: var(--ink-soft);
+    overflow-wrap: anywhere;
+  }
+
+  /* Palette as full-bleed colour fields */
+  .block-palette {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    height: clamp(240px, 34vw, 480px);
+  }
+  .swatch {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 4px;
+    padding: 18px 16px;
+    color: var(--ink);
+  }
+  .swatch.dark {
+    color: #fff;
+  }
+
+  @media (max-width: 800px) {
+    .block-type {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .block-palette {
+      grid-auto-flow: row;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      height: auto;
+    }
+    .swatch {
+      min-height: 120px;
+    }
+    .block-pair,
+    .block-trio,
+    .block-feature,
+    .block-feature.flip {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .block-feature.flip > :global(:first-child) {
+      order: 0;
+    }
+    .block-site {
+      padding: 0;
+    }
+    .site-frame {
+      border-left: 0;
+      border-right: 0;
+    }
+    /* On phones, show the site's own phone layout at 1:1 */
+    .site-viewport {
+      --site-w: 100%;
+    }
+  }
+</style>
+
+<script>
+  // Scale each embedded site so a 1440px-wide page fits its window
+  const DESKTOP = 1440;
+  document.querySelectorAll<HTMLElement>('[data-site-viewport]').forEach((vp) => {
+    const fit = () => {
+      const w = vp.clientWidth;
+      vp.style.setProperty('--s', w < 700 ? '1' : String(w / DESKTOP));
+    };
+    new ResizeObserver(fit).observe(vp);
+    fit();
+  });
+</script>

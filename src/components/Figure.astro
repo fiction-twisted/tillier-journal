@@ -1,0 +1,62 @@
+---
+// One image in a story. 'cover' fills its box; 'contain' sets the whole
+// artwork on a coloured field (bg can name a story colour, e.g. 'night').
+import { Image } from 'astro:assets';
+import type { Figure } from '../data/types';
+
+interface Props {
+  figure: Figure;
+  ratio?: string; // box aspect ratio; omitted = the image's own proportions
+  sizes: string;
+}
+
+const { figure, sizes } = Astro.props;
+const ratio = figure.ratio ?? Astro.props.ratio;
+const fit = figure.fit ?? 'cover';
+const bg = figure.bg ? (/^[a-z]+$/.test(figure.bg) ? `var(--c-${figure.bg}, ${figure.bg})` : figure.bg) : undefined;
+const style = [ratio && `aspect-ratio:${ratio}`, bg && `background:${bg}`].filter(Boolean).join(';');
+---
+
+<figure class:list={['fig', `fit-${fit}`, { boxed: ratio }]} style={style} data-reveal="image">
+  <div class="img-inner">
+    <Image src={figure.src} alt={figure.alt} widths={[640, 1200, 1800, 2400]} {sizes} />
+  </div>
+  {figure.caption && <figcaption class="label">{figure.caption}</figcaption>}
+</figure>
+
+<style>
+  .fig {
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+  }
+  .img-inner :global(img) {
+    width: 100%;
+    height: auto;
+  }
+  /* Boxed figures: the image fills (or sits inside) a fixed-ratio box */
+  .boxed .img-inner {
+    position: absolute;
+    inset: 0;
+  }
+  .boxed .img-inner :global(img) {
+    height: 100%;
+    object-fit: cover;
+  }
+  .fit-contain .img-inner {
+    padding: 9%;
+  }
+  .fit-contain .img-inner :global(img) {
+    object-fit: contain;
+  }
+  /* A contained image without a box still gets its coloured margin */
+  .fit-contain:not(.boxed) .img-inner {
+    padding: 6%;
+  }
+  figcaption {
+    position: absolute;
+    left: 16px;
+    bottom: 14px;
+    color: rgb(255 255 255 / 0.8);
+  }
+</style>

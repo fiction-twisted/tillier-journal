@@ -1,0 +1,102 @@
+---
+// Fixed header with the Tillier Journal logo.
+// masthead: the logo starts full width and shrinks into the header on scroll
+// (driven by motion.ts). Otherwise it sits in the header as the mark alone.
+import Logo from '../assets/tillier-logo.svg';
+import { issue } from '../data/issue';
+
+interface Props {
+  masthead?: boolean;
+}
+
+const { masthead = false } = Astro.props;
+---
+
+<header class:list={['site-header', { 'is-scrolled': !masthead }]}>
+  <p class="label header-date" data-today>{issue.city}</p>
+  <nav class="header-nav label" aria-label="Main">
+    <a href="/#contents">Index</a>
+    <a href="/#editor">About</a>
+    <a href="/#subscribe">Contact</a>
+  </nav>
+</header>
+
+<a href="/" class:list={['mast-logo', { 'mast-logo--compact': !masthead }]} aria-label="Tillier Journal, home">
+  <Logo />
+</a>
+
+<style>
+  .site-header {
+    position: fixed;
+    inset: 0 0 auto 0;
+    height: var(--header-h);
+    padding: 0 var(--gutter);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 20;
+    background: var(--paper);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.4s var(--ease);
+  }
+  .site-header.is-scrolled {
+    border-bottom-color: var(--rule);
+  }
+  .header-nav {
+    display: flex;
+    gap: 28px;
+  }
+  .header-nav a {
+    position: relative;
+  }
+  .header-nav a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -4px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.5s var(--ease);
+  }
+  .header-nav a:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .mast-logo {
+    display: block;
+    position: fixed;
+    left: 50%;
+    top: calc(var(--header-h) + 56px);
+    width: min(92vw, 1400px);
+    transform: translateX(-50%);
+    z-index: 21;
+    color: var(--ink);
+  }
+  /* Story pages: just the mark, centred in the header (170 of 737 logo units tall) */
+  .mast-logo--compact {
+    width: 150px;
+    top: calc(var(--header-h) / 2 - 150px * 0.2308 / 2);
+  }
+  .mast-logo--compact :global(.logo-word) {
+    opacity: 0;
+  }
+
+  @media (max-width: 800px) {
+    .header-date {
+      visibility: hidden;
+    }
+    .header-nav {
+      gap: 16px;
+    }
+    .mast-logo--compact {
+      width: 104px;
+      left: var(--gutter);
+      top: calc(var(--header-h) / 2 - 104px * 0.2308 / 2);
+      transform: none;
+    }
+  }
+</style>
