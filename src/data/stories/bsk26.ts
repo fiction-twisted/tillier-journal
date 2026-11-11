@@ -45,7 +45,6 @@ export const bsk26: Story = {
       ocean: '#6e89a5',
       steel: '#96a7b6',
       fog: '#d1d3d3',
-      screen: '#2a459d',
     },
     accent: '#0026bd',
     headingFont: helvetica,
@@ -70,7 +69,7 @@ export const bsk26: Story = {
       type: 'pair',
       figures: [
         { src: logoBlue, alt: 'BSK26 logo in royal blue', fit: 'contain', bg: '#ffffff' },
-        { src: logoOnBlue, alt: 'BSK26 logo in white on blue', fit: 'contain', bg: 'screen' },
+        { src: logoOnBlue, alt: 'BSK26 logo in white on blue', fit: 'contain', bg: 'royal' },
       ],
     },
     {
