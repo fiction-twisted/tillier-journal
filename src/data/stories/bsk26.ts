@@ -8,6 +8,7 @@ import screenProgram from '../../assets/stories/bsk26/screen-program.jpg';
 import screenSpons from '../../assets/stories/bsk26/screen-spons.jpg';
 import screenGalla from '../../assets/stories/bsk26/screen-galla.jpg';
 import posterA4 from '../../assets/stories/bsk26/poster-a4.jpg';
+import posterGrieghallen from '../../assets/stories/bsk26/poster-grieghallen.jpg';
 import promoSpread from '../../assets/stories/bsk26/promo-spread.jpg';
 import tote from '../../assets/stories/bsk26/tote.jpg';
 import mug from '../../assets/stories/bsk26/mug.jpg';
@@ -40,8 +41,8 @@ export const bsk26: Story = {
     colors: {
       royal: '#0026bd',
       night: '#131e3c',
-      deep: '#3e5978',
-      sea: '#6e89a5',
+      lead: '#3e5978',
+      ocean: '#6e89a5',
       steel: '#96a7b6',
       fog: '#d1d3d3',
       screen: '#2a459d',
@@ -92,13 +93,18 @@ export const bsk26: Story = {
         },
       ],
     },
-    { type: 'palette', colors: ['royal', 'night', 'deep', 'sea', 'steel', 'fog'] },
+    { type: 'palette', colors: ['royal', 'night', 'lead', 'ocean', 'steel', 'fog'] },
     { type: 'full', bleed: true, figure: { src: ledBannerSpons, alt: 'BSK26 banner and sponsor wall on the LED screen' } },
     {
       type: 'feature',
       flip: true,
       large: { src: promoSpread, alt: 'BSK26 two-page A4 promotion', fit: 'contain', bg: 'fog' },
       small: { src: posterA4, alt: 'BSK26 A4 poster', fit: 'contain', bg: 'night' },
+    },
+    {
+      type: 'full',
+      bleed: true,
+      figure: { src: posterGrieghallen, alt: 'The BSK26 poster as a banner on the facade of Grieghallen' },
     },
     {
       type: 'text',

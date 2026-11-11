@@ -1,8 +1,8 @@
 /* Tillier Journal — base tokens.
    Fonts: Bebas Neue (headlines, self-hosted), IvyJournal (body, standfirsts)
    and Century Gothic Pro (labels, UI).
-   Locally they resolve from the Adobe Fonts activated on this Mac; in
-   production they will come from an Adobe Fonts web project. */
+   IvyJournal, Century Gothic and Neue Haas Grotesk come from the Adobe
+   Fonts web project (kit npr8loc), linked in Base.astro. */
 
 :root {
   --paper: #f6f3ee;
@@ -11,7 +11,7 @@
   --rule: #d9d4cb;
   --accent: #b08d4a; /* gold, used sparingly */
 
-  --font-sans: 'century-gothic-pro', 'Century Gothic Pro', 'Century Gothic', 'Avenir Next', sans-serif;
+  --font-sans: 'century-gothic', 'Century Gothic Pro', 'Century Gothic', 'Avenir Next', sans-serif;
   --font-serif: 'ivyjournal', 'IvyJournal', 'Iowan Old Style', Georgia, serif;
   --font-display: 'Bebas Neue', 'DIN Condensed', Impact, sans-serif; /* GQ-style headlines */
 
