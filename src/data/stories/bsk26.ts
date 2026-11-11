@@ -21,13 +21,13 @@ import eventStage from '../../assets/stories/bsk26/event-stage.jpg';
 const helvetica = "'Helvetica Neue', 'neue-haas-grotesk-display', Helvetica, Arial, sans-serif";
 const ivy = "'ivyjournal', 'IvyJournal', Georgia, serif";
 
-// All copy is a DRAFT for Sigve to rewrite; facts marked [placeholder] are unknown.
+// Copy based on Sigve's brief (ripple effect, Bergen, security); photographer credit still to come.
 export const bsk26: Story = {
   slug: 'bsk26',
   section: 'Identity',
-  title: 'Securing the Image',
+  title: 'The Ripple Effect',
   standfirst:
-    'An identity for Bergen Sikkerhetskonferanse 2026 — drawn in broken lines, set against ice, steel and open sea.',
+    'An identity for Bergen Sikkerhetskonferanse 2026, built on what happens when a drop hits still water: rings that spread outward, and break as they travel.',
   client: 'Bergen Sikkerhetskonferanse',
   year: 2026,
   page: 12,
@@ -52,19 +52,25 @@ export const bsk26: Story = {
   },
 
   details: [
-    { label: 'Client', value: 'Bergen Sikkerhetskonferanse [placeholder]' },
-    { label: 'Year', value: '2026 [placeholder]' },
-    { label: 'Role', value: 'Art director [placeholder]' },
-    { label: 'Scope', value: 'Identity, screens, print, merchandise, website [placeholder]' },
+    { label: 'Client', value: 'Bergen Sikkerhetskonferanse' },
+    { label: 'Year', value: '2026' },
+    { label: 'Role', value: 'Art director' },
+    { label: 'Scope', value: 'Identity, print, screens, moving image, merchandise, website' },
   ],
 
   intro: [
-    'Bergen Sikkerhetskonferanse gathers students, cadets, politicians and the defence sector for a single day of talks on security in a changing world. The 2026 edition needed an identity that could carry that weight without sliding into the clichés of the genre.',
-    'The letters of the logo are drawn as parallel lines that break and reconnect, a mark that holds together under pressure. Around it, photographs of ice, steel and naval vessels are pulled apart and rebuilt, so the imagery itself feels contested.',
-    'The system ran from the stage screens in Grieghallen to posters, programmes, tote bags and the conference website.',
+    'Drop something into still water and rings spread from the point of impact. A conference works the same way. For one day, Grieghallen becomes a centre where opinions are formed and shared, where people inform one another and a dialogue begins. When the doors close, the attendees carry the conversations, the talks and the impressions out with them, ring by ring.',
+    'The BSK26 mark is built on that idea. Its letters are drawn in parallel lines that break as they bend, like ripples on a surface. The breaks also trace the journey information takes: the further it travels from its source, the more it is distorted along the way.',
+    'Water runs through the rest of the identity, too. Bergen is renowned for its rainy days, and as a city on the waterfront, its history was written by trade along the sea routes. The palette moves from royal blue through night, lead and ocean to fog: the colours of a harbour town under low cloud.',
+    'And all of it had to serve a conference on security, held as the North Atlantic Alliance frays and Europe raises its military budgets. An opening film set the tone before the first speaker took the stage, with a quote from Mark Carney.',
   ],
 
   blocks: [
+    {
+      type: 'quote',
+      text: 'Let me be direct: We’re in the midst of a rupture, not a transition.',
+      cite: 'Mark Carney, Prime Minister of Canada',
+    },
     {
       type: 'pair',
       figures: [
@@ -107,9 +113,9 @@ export const bsk26: Story = {
     },
     {
       type: 'text',
-      kicker: 'On screen',
+      kicker: 'Programme & sponsors',
       paragraphs: [
-        'On the day, the identity lived mostly on screens: the stage backdrop, the programme between sessions, the sponsor wall and the gala dinner.',
+        'On the screens in Grieghallen, a naval frigate fades into the rooftops of Bergen under a veil of fog: the city’s maritime history and today’s security in a single image. The programme sets the day’s four parts in plain Helvetica alongside it, while the sponsor screen gathers the partners on a pale band across the ship, so the picture carries on behind them.',
       ],
     },
     {
@@ -128,7 +134,6 @@ export const bsk26: Story = {
         { src: mug, alt: 'BSK26 mug in its box', fit: 'contain', bg: '#efefef' },
       ],
     },
-    { type: 'quote', text: '[Draft pull quote — a line about the idea, in Sigve’s words.]' },
     { type: 'full', bleed: true, figure: { src: eventStage, alt: 'A speaker on stage in front of the BSK26 screen' } },
     {
       type: 'feature',
@@ -146,6 +151,6 @@ export const bsk26: Story = {
 
   credits: [
     { label: 'Art direction & design', value: 'Sigve Tillier' },
-    { label: 'Event photography', value: '[placeholder]' },
+    { label: 'Event photography', value: 'Sverre Christian Jarild' },
   ],
 };

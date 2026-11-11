@@ -21,7 +21,7 @@ export type Block =
   | { type: 'feature'; large: Figure; small: Figure; flip?: boolean } // one large + one small
   | { type: 'site'; url: string; label: string } // live website in a browser window
   | { type: 'text'; kicker?: string; paragraphs: string[] }
-  | { type: 'quote'; text: string }
+  | { type: 'quote'; text: string; cite?: string }
   | { type: 'typefaces'; faces: Typeface[] } // the identity's type, set live
   | { type: 'palette'; colors: string[] }; // names from story.theme.colors
 

@@ -95,6 +95,7 @@ const isDark = (hex: string) => {
   block.type === 'quote' && (
     <blockquote class="block block-quote">
       <p data-reveal="lines">{block.text}</p>
+      {block.cite && <footer class="label quote-cite" data-reveal="fade">{block.cite}</footer>}
     </blockquote>
   )
 }
@@ -258,6 +259,11 @@ const isDark = (hex: string) => {
     line-height: 1.05;
     letter-spacing: -0.025em;
     color: var(--s-accent);
+  }
+  .quote-cite {
+    margin-top: 28px;
+    letter-spacing: 0.22em;
+    color: var(--ink-soft);
   }
 
   /* Typefaces, set live rather than shown as a specimen sheet */
