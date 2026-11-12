@@ -4,6 +4,7 @@
 import type { Story } from './types';
 import { bsk26 } from './stories/bsk26';
 import { diskotech } from './stories/diskotech';
+import { ymtVol5 } from './stories/ymt-vol5';
 
 export type { Story };
 
@@ -17,22 +18,12 @@ export const coverStory: Story = bsk26;
 
 export const stories: Story[] = [
   diskotech,
-  {
-    slug: 'forthcoming-1',
-    section: 'Forthcoming',
-    title: 'Story to Come',
-    standfirst: 'Placeholder for a project Sigve will add soon.',
-    client: 'To be announced',
-    year: 2026,
-    page: 40,
-    tone: '#8c8579',
-    imageLabel: 'Image to come',
-  },
+  ymtVol5,
   {
     slug: 'forthcoming-2',
     section: 'Forthcoming',
     title: 'Another Story to Come',
-    standfirst: 'Placeholder for a project Sigve will add soon.',
+    standfirst: 'Placeholder for a project Sigve Tillier will add soon.',
     client: 'To be announced',
     year: 2026,
     page: 52,

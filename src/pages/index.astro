@@ -104,15 +104,21 @@ const sections = [...new Set(contents.map((s) => s.section))];
         {
           rest.map((s) => (
             <article class="story" id={s.slug}>
-              <div class="story-image" data-reveal="image" style={`--tone:${s.tone}`}>
-                <div class="img-inner">
-                  <span class="label img-label">{s.imageLabel}</span>
+              <a class="story-link" href={storyHref(s)}>
+                <div class="story-image" data-reveal="image" style={`--tone:${s.tone}`}>
+                  <div class="img-inner">
+                    {storyImage(s) ? (
+                      <Image class="story-img" src={storyImage(s)!.src} alt={storyImage(s)!.alt} widths={[480, 800, 1100]} sizes="(max-width: 800px) 96vw, 30vw" />
+                    ) : (
+                      <span class="label img-label">{s.imageLabel}</span>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <p class="label kicker">{s.section}</p>
-              <h3 class="story-title" data-reveal="lines">{s.title}</h3>
-              <p class="standfirst" data-reveal="fade">{s.standfirst}</p>
-              <p class="label byline">{s.client} <span>—</span> {s.year}</p>
+                <p class="label kicker">{s.section}</p>
+                <h3 class="story-title" data-reveal="lines">{s.title}</h3>
+                <p class="standfirst" data-reveal="fade">{s.standfirst}</p>
+                <p class="label byline">{s.client} <span>—</span> {s.year}</p>
+              </a>
             </article>
           ))
         }
@@ -146,7 +152,7 @@ const sections = [...new Set(contents.map((s) => s.section))];
         <div class="editor-body" data-reveal="fade">
           <p class="dropcap">
             This is placeholder copy for the editor's letter, a short, personal introduction in
-            Sigve's own voice. It will say who he is, what he makes and what he cares about: art
+            Sigve Tillier's own voice. It will say who he is, what he makes and what he cares about: art
             direction, identities, editorial design and motion, made in Bergen.
           </p>
           <p>
