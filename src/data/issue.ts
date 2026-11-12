@@ -3,6 +3,7 @@
 // any components.
 import type { Story } from './types';
 import { bsk26 } from './stories/bsk26';
+import { diskotech } from './stories/diskotech';
 
 export type { Story };
 
@@ -15,17 +16,7 @@ export const issue = {
 export const coverStory: Story = bsk26;
 
 export const stories: Story[] = [
-  {
-    slug: 'diskotech',
-    section: 'Nightlife',
-    title: 'After Hours, Before Print',
-    standfirst: 'Posters, photography and reels for a Bergen DJ collective that never sleeps.',
-    client: 'Diskotech',
-    year: 2026,
-    page: 28,
-    tone: '#5a2430',
-    imageLabel: 'Diskotech — poster series',
-  },
+  diskotech,
   {
     slug: 'forthcoming-1',
     section: 'Forthcoming',

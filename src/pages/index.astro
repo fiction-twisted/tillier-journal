@@ -10,6 +10,7 @@ import { issue, coverStory, stories, allStories, storyHref } from '../data/issue
 const contents = allStories;
 const coverImage = coverStory.coverImage ?? coverStory.hero;
 const [lead, ...rest] = stories;
+const storyImage = (s: (typeof stories)[number]) => s.coverImage ?? s.hero;
 // Only list sections that actually have a story in this issue.
 const sections = [...new Set(contents.map((s) => s.section))];
 ---
@@ -81,13 +82,23 @@ const sections = [...new Set(contents.map((s) => s.section))];
     <!-- Stories -->
     <section class="stories">
       <article class="story story--lead" id={lead.slug}>
-        <div class="story-image" data-reveal="image" style={`--tone:${lead.tone}`}>
-          <div class="img-inner"><span class="label img-label">{lead.imageLabel}</span></div>
-        </div>
-        <p class="label kicker">{lead.section}</p>
-        <h3 class="story-title" data-reveal="lines">{lead.title}</h3>
-        <p class="standfirst" data-reveal="fade">{lead.standfirst}</p>
-        <p class="label byline">{lead.client} <span>—</span> {lead.year}</p>
+        <a class="story-link" href={storyHref(lead)}>
+          <div class="story-image" data-reveal="image" style={`--tone:${lead.tone}`}>
+            <div class="img-inner">
+              {
+                storyImage(lead) ? (
+                  <Image class="story-img" src={storyImage(lead)!.src} alt={storyImage(lead)!.alt} widths={[640, 1000, 1400]} sizes="(max-width: 800px) 96vw, 50vw" />
+                ) : (
+                  <span class="label img-label">{lead.imageLabel}</span>
+                )
+              }
+            </div>
+          </div>
+          <p class="label kicker">{lead.section}</p>
+          <h3 class="story-title" data-reveal="lines">{lead.title}</h3>
+          <p class="standfirst" data-reveal="fade">{lead.standfirst}</p>
+          <p class="label byline">{lead.client} <span>—</span> {lead.year}</p>
+        </a>
       </article>
       <div class="story-stack">
         {
@@ -416,6 +427,14 @@ const sections = [...new Set(contents.map((s) => s.section))];
   }
   .story-image .img-inner {
     transition: transform 1.4s var(--ease);
+  }
+  .story-link {
+    display: block;
+  }
+  .story-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
   .story:hover .story-image .img-inner {
     transform: scale(1.04);

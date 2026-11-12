@@ -1,7 +1,7 @@
 ---
 // One image in a story. 'cover' fills its box; 'contain' sets the whole
 // artwork on a coloured field (bg can name a story colour, e.g. 'night').
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import type { Figure } from '../data/types';
 
 interface Props {
@@ -15,12 +15,36 @@ const ratio = figure.ratio ?? Astro.props.ratio;
 const fit = figure.fit ?? 'cover';
 const bg = figure.bg ? (/^[a-z]+$/.test(figure.bg) ? `var(--c-${figure.bg}, ${figure.bg})` : figure.bg) : undefined;
 const style = [ratio && `aspect-ratio:${ratio}`, bg && `background:${bg}`].filter(Boolean).join(';');
+// Films loop silently like moving pictures on the page; the still is their poster
+const still = figure.video ? await getImage({ src: figure.src, width: 1200, format: 'webp' }) : undefined;
 ---
 
 <figure class:list={['fig', `fit-${fit}`, { boxed: ratio }]} style={style} data-reveal="image">
   <div class="img-inner">
-    <Image src={figure.src} alt={figure.alt} widths={[640, 1200, 1800, 2400]} {sizes} />
+    {
+      figure.video ? (
+        <video
+          src={figure.video}
+          poster={still?.src}
+          aria-label={figure.alt}
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          data-film
+        />
+      ) : (
+        <Image src={figure.src} alt={figure.alt} widths={[640, 1200, 1800, 2400]} {sizes} />
+      )
+    }
   </div>
+  {
+    figure.video && (
+      <button class="label sound" type="button" data-sound aria-pressed="false">
+        Sound off
+      </button>
+    )
+  }
   {figure.caption && <figcaption class="label">{figure.caption}</figcaption>}
 </figure>
 
@@ -30,7 +54,9 @@ const style = [ratio && `aspect-ratio:${ratio}`, bg && `background:${bg}`].filte
     margin: 0;
     overflow: hidden;
   }
-  .img-inner :global(img) {
+  .img-inner :global(img),
+  .img-inner video {
+    display: block;
     width: 100%;
     height: auto;
   }
@@ -39,15 +65,32 @@ const style = [ratio && `aspect-ratio:${ratio}`, bg && `background:${bg}`].filte
     position: absolute;
     inset: 0;
   }
-  .boxed .img-inner :global(img) {
+  .boxed .img-inner :global(img),
+  .boxed .img-inner video {
     height: 100%;
     object-fit: cover;
   }
   .fit-contain .img-inner {
     padding: 9%;
   }
-  .fit-contain .img-inner :global(img) {
+  .fit-contain .img-inner :global(img),
+  .fit-contain .img-inner video {
     object-fit: contain;
+  }
+  .sound {
+    position: absolute;
+    right: 14px;
+    bottom: 12px;
+    padding: 7px 10px 6px;
+    border: 1px solid rgb(255 255 255 / 0.5);
+    background: rgb(0 0 0 / 0.35);
+    color: #fff;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+  }
+  .sound[aria-pressed='true'] {
+    background: #fff;
+    color: #111;
   }
   /* A contained image without a box still gets its coloured margin */
   .fit-contain:not(.boxed) .img-inner {
@@ -60,3 +103,25 @@ const style = [ratio && `aspect-ratio:${ratio}`, bg && `background:${bg}`].filte
     color: rgb(255 255 255 / 0.8);
   }
 </style>
+
+<script>
+  // Films play only while on screen (and not at all for reduced motion);
+  // the button switches sound on for that one film.
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLVideoElement>('video[data-film]').forEach((v) => {
+    if (reduce) {
+      v.controls = true;
+      return;
+    }
+    new IntersectionObserver(([e]) => (e.isIntersecting ? v.play().catch(() => {}) : v.pause()), {
+      threshold: 0.25,
+    }).observe(v);
+    const btn = v.closest('figure')?.querySelector<HTMLButtonElement>('[data-sound]');
+    btn?.addEventListener('click', () => {
+      v.muted = !v.muted;
+      btn.setAttribute('aria-pressed', String(!v.muted));
+      btn.textContent = v.muted ? 'Sound off' : 'Sound on';
+      if (!v.muted) v.play().catch(() => {});
+    });
+  });
+</script>

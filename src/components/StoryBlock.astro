@@ -17,12 +17,20 @@ const isDark = (hex: string) => {
   const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
   return 0.2126 * r + 0.7152 * g + 0.0722 * b < 0.55;
 };
+
+// Escape the copy, then set ordinals (5th, 23rd) as small raised capitals
+const typeset = (text: string) =>
+  text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\b(\d+)(st|nd|rd|th)\b/g, '$1<sup class="ord">$2</sup>');
 ---
 
 {
   block.type === 'full' && (
-    <div class:list={['block', 'block-full', { bleed: block.bleed }]}>
-      <Figure figure={block.figure} sizes={block.bleed ? '100vw' : '96vw'} />
+    <div class:list={['block', 'block-full', { bleed: block.bleed, narrow: block.narrow }]}>
+      <Figure figure={block.figure} sizes={block.bleed ? '100vw' : block.narrow ? '(max-width: 800px) 96vw, 760px' : '96vw'} />
     </div>
   )
 }
@@ -85,7 +93,7 @@ const isDark = (hex: string) => {
     <div class="block block-text" data-reveal="fade">
       {block.kicker && <p class="label text-kicker">{block.kicker}</p>}
       {block.paragraphs.map((p) => (
-        <p>{p}</p>
+        <p set:html={typeset(p)} />
       ))}
     </div>
   )
@@ -131,7 +139,7 @@ const isDark = (hex: string) => {
 
 {
   block.type === 'palette' && (
-    <div class="block bleed block-palette">
+    <div class:list={['block', 'bleed', 'block-palette', { short: block.short }]}>
       {block.colors.map((name) => {
         const hex = colors[name] ?? '#000000';
         return (
@@ -151,6 +159,12 @@ const isDark = (hex: string) => {
   }
   .block.bleed {
     padding: 0;
+  }
+  /* A single square or upright piece, centred like a plate on the page */
+  .block.narrow {
+    width: 100%;
+    max-width: calc(760px + var(--gutter) * 2);
+    margin: clamp(32px, 5vw, 72px) auto;
   }
   .block-grid {
     display: grid;
@@ -243,6 +257,14 @@ const isDark = (hex: string) => {
     font-size: clamp(19px, 1.5vw, 22px);
     line-height: 1.55;
   }
+  .block-text :global(.ord) {
+    font-size: 0.58em;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    vertical-align: 0.62em;
+    line-height: 0;
+    margin-left: 0.04em;
+  }
   /* Labels are the magazine's voice: gold, like the rest of the frame */
   .text-kicker {
     font-weight: 700;
@@ -317,6 +339,10 @@ const isDark = (hex: string) => {
     grid-auto-flow: column;
     grid-auto-columns: minmax(0, 1fr);
     height: clamp(240px, 34vw, 480px);
+  }
+  /* A slimmer band, for colours that belong to one event rather than the brand */
+  .block-palette.short {
+    height: clamp(140px, 15vw, 220px);
   }
   .swatch {
     display: flex;

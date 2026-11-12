@@ -12,10 +12,12 @@ export type Figure = {
   bg?: string;
   /** override the module's default box ratio, e.g. '16 / 9' for screens */
   ratio?: string;
+  /** a looping film (path under /public); src then serves as its still frame */
+  video?: string;
 };
 
 export type Block =
-  | { type: 'full'; figure: Figure; bleed?: boolean } // one image, full width (bleed = edge to edge)
+  | { type: 'full'; figure: Figure; bleed?: boolean; narrow?: boolean } // one image, full width (bleed = edge to edge, narrow = centred column)
   | { type: 'pair'; figures: [Figure, Figure] } // two side by side
   | { type: 'trio'; figures: [Figure, Figure, Figure] } // three in a row
   | { type: 'feature'; large: Figure; small: Figure; flip?: boolean } // one large + one small
@@ -23,7 +25,7 @@ export type Block =
   | { type: 'text'; kicker?: string; paragraphs: string[] }
   | { type: 'quote'; text: string; cite?: string }
   | { type: 'typefaces'; faces: Typeface[] } // the identity's type, set live
-  | { type: 'palette'; colors: string[] }; // names from story.theme.colors
+  | { type: 'palette'; colors: string[]; short?: boolean }; // names from story.theme.colors; short = a slimmer band
 
 export type Typeface = {
   name: string;
