@@ -68,7 +68,7 @@ export const bsk26: Story = {
   blocks: [
     {
       type: 'quote',
-      text: 'Let me be direct: We’re in the midst of a rupture, not a transition.',
+      text: 'Let me be direct: We are in the midst of a rupture, not a transition.',
       cite: 'Mark Carney, Prime Minister of Canada',
     },
     {
