@@ -6,6 +6,7 @@ import { bsk26 } from './stories/bsk26';
 import { diskotech } from './stories/diskotech';
 import { ymtVol5 } from './stories/ymt-vol5';
 import { darligHoldning } from './stories/darlig-holdning';
+import { covers } from './stories/covers';
 
 export type { Story };
 
@@ -21,6 +22,7 @@ export const stories: Story[] = [
   diskotech,
   ymtVol5,
   darligHoldning,
+  covers,
 ];
 
 /** Stories with a full feature get their own page; the rest link to the cover */
