@@ -4,6 +4,7 @@ import SiteHeader from '../components/SiteHeader.astro';
 import Footer from '../components/Footer.astro';
 import { Image } from 'astro:assets';
 import Logo from '../assets/tillier-logo.svg';
+import portrait from '../assets/editor/portrait-editorial.jpg';
 import paperCover from '../assets/covers/ego-dummy-101.jpg'; // placeholder until the Tillier Journal cover exists
 import { issue, coverStory, stories, allStories, storyHref } from '../data/issue';
 
@@ -144,20 +145,42 @@ const sections = [...new Set(contents.map((s) => s.section))];
     <!-- Letter from the editor -->
     <section id="editor" class="editor">
       <div class="editor-portrait" data-reveal="image" style="--tone:#c9c2b6">
-        <div class="img-inner"><span class="label img-label">Portrait</span></div>
+        <div class="img-inner"><Image class="story-img" src={portrait} alt="Black-and-white portrait of Sigve Tillier in a turtleneck and dark polo" widths={[480, 800, 1100]} sizes="(max-width: 800px) 90vw, 32vw" /></div>
       </div>
       <div class="editor-text">
         <p class="label kicker">Letter from the editor</p>
-        <h2 class="editor-title" data-reveal="lines">Welcome to the first issue</h2>
+        <h2 class="editor-title" data-reveal="lines">Never Shed the Cape</h2>
         <div class="editor-body" data-reveal="fade">
           <p class="dropcap">
-            This is placeholder copy for the editor's letter, a short, personal introduction in
-            Sigve Tillier's own voice. It will say who he is, what he makes and what he cares about: art
-            direction, identities, editorial design and motion, made in Bergen.
+            Kanye West may be notorious for a lot of different things, among them much that shouldn’t
+            be emulated, but there’s a reason he was once the most influential human being on the planet:
+            he never shed the cape. His is this equation. At some point, the child who stands on the
+            tabletop wearing a cape is told by some adult that he’s not Superman, and that it’s time to take
+            the cape off and grow up. West never believed he wasn’t Superman.
           </p>
           <p>
-            The stories in this issue are projects. Each opens like a feature, with a headline,
-            a standfirst and the work itself given room to breathe.
+            This issue may not be for everyone, as it’s a blatant celebration of its creator. But what is
+            a portfolio if not a celebration of one’s work? The work is but an extension of the self, and
+            the self is best laid out in the magazine format. I thus welcome you to the first issue of
+            Tillier Journal, journaling the work of art director and designer Sigve Tillier: still very
+            much in the belief that he can fly.
+          </p>
+          <p>
+            Since graduating with a bachelor’s degree in Visual Communication from KMD, the University of
+            Bergen’s Faculty of Fine Art, Music and Design, in 2024, much of my work has been event-based;
+            related to music – or both. Some of the work presented is from my time as a student, and was
+            awarded a diploma at Grafill’s Visueltprisen in 2024.
+          </p>
+          <p>
+            In this issue: a security conference that ripples outward from Grieghallen, a club night
+            conceived by six friends who couldn’t find the party we were looking for, a student magazine
+            that blurred the line between print and machine, an EP cover that is deliberately a little
+            off, and four records I keep returning to, covered in my own hand.
+          </p>
+          <p>
+            What ties it together is a belief that every project has a story worth telling properly, and
+            that the best identities are built from that story rather than dressed on top of it. Thank you
+            for reading. There’s more to come. Please enjoy!
           </p>
         </div>
         <p class="signature">Sigve Tillier</p>
