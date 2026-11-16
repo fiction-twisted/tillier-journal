@@ -379,12 +379,15 @@ const sections = [...new Set(contents.map((s) => s.section))];
     display: grid;
     grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
     gap: var(--gutter);
-    margin: 140px var(--gutter) 0;
+    margin: 80px var(--gutter) 0;
     padding-top: 28px;
     border-top: 6px solid var(--ink);
   }
   .contents-heading {
     font-size: clamp(56px, 7vw, 112px);
+    /* "Issue" in a lighter Bebas Neue Pro, so it sits back beside the italic */
+    font-family: 'bebas-neue-pro', var(--font-display);
+    font-weight: 400;
   }
   /* Dim the link, not the li: the li's opacity belongs to the reveal animation */
   .contents-list li > a {
@@ -584,6 +587,9 @@ const sections = [...new Set(contents.map((s) => s.section))];
   }
 
   /* Paper edition — full-bleed split: covers on paper, offer on ink */
+  /* On the front page the issue ends in one dark block: the offer runs straight into the footer */
+  :global(body:has(#paper)) { --footer-gap: 0px; }
+  :global(body:has(#paper) .footer) { border-top: 3px solid var(--paper); } /* a white rule between the offer and the footer */
   .paper {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
