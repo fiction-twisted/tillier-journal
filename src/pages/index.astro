@@ -589,7 +589,9 @@ const sections = [...new Set(contents.map((s) => s.section))];
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     min-height: min(90vh, 860px);
     margin-top: 160px;
-    border-top: 1px solid var(--ink);
+    /* 3px, like the rule on the section bar, above and below the block */
+    border-top: 3px solid var(--ink);
+    border-bottom: 3px solid var(--ink);
   }
   .paper-covers {
     display: grid;
@@ -738,6 +740,9 @@ const sections = [...new Set(contents.map((s) => s.section))];
     }
     .paper-caption {
       margin-top: 30px;
+    }
+    .paper {
+      border: 0; /* the frame around the covers takes over */
     }
     /* On phones the covers sit in a black frame that runs straight into the offer below, so they read as one block */
     .paper-covers {
