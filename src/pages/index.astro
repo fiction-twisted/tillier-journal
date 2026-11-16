@@ -40,7 +40,8 @@ const sections = [...new Set(contents.map((s) => s.section))];
   <main>
     <!-- Cover story -->
     <article class="cover">
-      <div class="cover-image" data-reveal="image" style={`--tone:${coverStory.tone}`}>
+      <!-- The picture opens the story too; the card below is the labelled link, so this one is skipped by keyboard and screen reader -->
+      <a class="cover-image" href={storyHref(coverStory)} tabindex="-1" aria-hidden="true" data-reveal="image" style={`--tone:${coverStory.tone}`}>
         <div class="img-inner" data-parallax>
           {
             coverImage ? (
@@ -50,7 +51,7 @@ const sections = [...new Set(contents.map((s) => s.section))];
             )
           }
         </div>
-      </div>
+      </a>
       <a class="cover-card" href={storyHref(coverStory)}>
         <p class="label kicker">Cover story <span>·</span> {coverStory.section}</p>
         <h2 class="cover-title" data-reveal="lines">{coverStory.title}</h2>
@@ -319,7 +320,9 @@ const sections = [...new Set(contents.map((s) => s.section))];
     margin: 48px var(--gutter) 0;
   }
   .cover-image {
+    display: block;
     height: min(88vh, 900px);
+    cursor: pointer;
   }
   .cover-card {
     position: relative;
