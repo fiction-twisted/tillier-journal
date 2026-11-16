@@ -7,12 +7,15 @@ interface Props {
   description?: string;
   /** 'white' for the front page; story pages keep the warm paper tone */
   tone?: 'paper' | 'white';
+  /** keep the page out of search engines (drafts and working pages) */
+  noindex?: boolean;
 }
 
 const {
   title = 'Tillier Journal',
   description = 'The portfolio of Sigve Tillier, art director and designer in Bergen.',
   tone = 'paper',
+  noindex = false,
 } = Astro.props;
 ---
 
@@ -21,6 +24,7 @@ const {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="preconnect" href="https://use.typekit.net" crossorigin />
     <link rel="stylesheet" href="https://use.typekit.net/npr8loc.css" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
