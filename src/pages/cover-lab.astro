@@ -1,0 +1,167 @@
+---
+// Draft page for choosing the Tillier Journal cover. Not linked from the site.
+import Base from '../layouts/Base.astro';
+import Logo from '../assets/tillier-logo.svg';
+import mirrorBg from '../assets/cover/mirror-bg.jpg';
+import mirrorFg from '../assets/cover/mirror-fg.png';
+import alyxBg from '../assets/cover/alyx-bg.jpg';
+import alyxFg from '../assets/cover/alyx-fg.png';
+---
+
+<Base title="Cover lab — Tillier Journal">
+  <main class="lab">
+    <!-- A: the mirror. Companion to B (as Vogue's two Chalamet covers): same masthead, hierarchy and type,
+         gold where B uses mint, black boxes where B uses grey, the layout mirrored -->
+    <article class="cover cover--mirror">
+      <img class="bg" src={mirrorBg.src} alt="" />
+      <img class="fg" src={mirrorFg.src} alt="" />
+      <div class="veil" aria-hidden="true"></div>
+      <div class="mast"><Logo /></div>
+      <p class="dateline label">Issue 01 <span class="arc">·</span> Autumn 2026 <span class="arc">·</span> Bergen</p>
+
+      <div class="lines">
+        <p><span class="tag">Inside</span></p>
+        <p><span class="box">The Ripple Effect</span></p>
+        <p class="ctx">An identity that spreads<br />from Grieghallen</p>
+        <p><span class="box">The Party We Couldn’t Find</span></p>
+        <p class="ctx">Bergen’s missing night out</p>
+        <p><span class="box">Coming Into Focus</span></p>
+        <p class="ctx">Where print met the machine</p>
+        <p><span class="tag">+</span></p>
+        <p class="pale"><span>Second Generation</span></p>
+        <p class="pale"><span>Covers</span></p>
+      </div>
+
+      <div class="hero">
+        <p class="hero-name">Sigve Tillier<span class="bl"></span></p>
+        <p class="hero-serif"><em>Never shed<br />the cape</em></p>
+        <p class="hero-note">The editor on the art of self-aviation</p>
+      </div>
+    </article>
+
+    <!-- B: the Alyx look. In the colours of the EGO dummy: pale mint masthead behind the head, white type, mint and grey boxes -->
+    <article class="cover cover--alyx">
+      <img class="bg" src={alyxBg.src} alt="" />
+      <div class="mast"><Logo /></div>
+      <img class="fg" src={alyxFg.src} alt="" />
+      <p class="dateline label">Issue 01 · Autumn 2026 · Bergen</p>
+
+      <div class="lines">
+        <p><span class="tag">Inside</span></p>
+        <p class="kick">The Ripple Effect</p>
+        <p class="ctx">An identity that spreads<br />from Grieghallen</p>
+        <p class="kick">The Party We<br />Couldn’t Find</p>
+        <p class="ctx">Bergen’s missing night out</p>
+        <p class="kick">Coming Into Focus</p>
+        <p class="ctx">Where print met the machine</p>
+        <p><span class="tag">+</span></p>
+        <p class="pale"><span>Second Generation</span></p>
+        <p class="pale"><span>Covers</span></p>
+      </div>
+
+      <div class="hero">
+        <p class="hero-name">Sigve Tillier<span class="bl"></span></p>
+        <p class="hero-serif"><em>Never shed<br />the cape</em></p>
+        <p class="hero-note">The editor on the art of self-aviation</p>
+      </div>
+    </article>
+  </main>
+</Base>
+
+<style>
+  .lab {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 48px;
+    justify-content: center;
+    align-items: flex-start; /* stops the flex row stretching the covers past 4:5 */
+    padding: 48px 24px 96px;
+    background: #d9d4cb;
+    min-height: 100vh;
+  }
+  .cover {
+    position: relative;
+    width: min(560px, 92vw);
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    container-type: inline-size;
+    box-shadow: 0 30px 60px rgb(0 0 0 / 0.25);
+  }
+  .cover .bg,
+  .cover .fg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .cover .bg { z-index: 0; }
+  .mast { position: absolute; z-index: 1; }
+  .cover .fg { z-index: 2; }
+  .cover > :not(.bg):not(.fg):not(.mast):not(.veil) { position: absolute; z-index: 3; }
+
+  .mast :global(svg) { width: 100%; height: auto; display: block; }
+  .dateline { font-size: 1.7cqw; letter-spacing: 0.2em; }
+
+  .kick {
+    font-family: var(--font-display);
+    font-size: 5.6cqw;
+    line-height: 0.92;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+  }
+  .sub {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 2.6cqw;
+    line-height: 1.15;
+    margin: 0.4cqw 0 2.4cqw;
+  }
+  .hero-name {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    line-height: 0.86;
+  }
+  .hero-serif { font-family: var(--font-serif); font-weight: 300; line-height: 0.95; }
+  .hero-sub { font-family: var(--font-serif); font-style: italic; }
+
+  /* A — mirror: the same system as B, in gold and black */
+  .cover--mirror { --gold: var(--accent); --shade: 0 0.25cqw 1.4cqw rgb(0 0 0 / 0.55); color: #fff; background: #000; }
+  .cover--mirror .mast { left: 5cqw; right: 5cqw; top: 6cqw; color: var(--gold); z-index: 3; }
+  .cover--mirror .dateline { left: 5cqw; top: 2cqw; color: #f3eee6; font-family: 'bebas-neue-pro', var(--font-display); font-weight: 500; font-size: 2.4cqw; letter-spacing: 0.12em; }
+  .cover--mirror .lines { left: 5cqw; top: 40cqw; width: 44cqw; }
+  .cover--mirror .lines p { margin: 0; }
+  .cover--mirror .tag { display: inline-block; background: var(--gold); color: #000; font-family: var(--font-sans); font-size: 2.1cqw; letter-spacing: 0.06em; padding: 0.3cqw 1.4cqw; min-width: 12cqw; text-align: center; margin-bottom: 1.6cqw; }
+  .cover--mirror .box { display: inline-block; background: #000; color: #fff; font-family: var(--font-display); text-transform: uppercase; font-size: 4.4cqw; line-height: 1; padding: 0.6cqw 1.2cqw 0.3cqw; }
+  .cover--mirror .ctx { font-family: 'bebas-neue-pro', var(--font-display); font-weight: 400; text-transform: uppercase; letter-spacing: 0.04em; font-size: 3.3cqw; line-height: 1; color: #fff; text-shadow: var(--shade); margin: 0.8cqw 0 2.4cqw !important; }
+  .cover--mirror .pale { margin-bottom: 1cqw !important; }
+  .cover--mirror .pale span { display: inline-block; background: #000; color: #fff; font-family: var(--font-display); text-transform: uppercase; font-size: 3.6cqw; line-height: 1; padding: 0.6cqw 1.2cqw 0.3cqw; }
+  .cover--mirror .hero { right: 5cqw; top: 84.58cqw; width: 80cqw; text-align: right; }
+  .cover--mirror .hero-name { font-family: var(--font-display); text-transform: uppercase; font-size: 7cqw; line-height: 1; letter-spacing: 0.04em; color: var(--gold-hero); text-shadow: var(--shade-hero); }
+  .cover--mirror .hero-serif { font-family: var(--font-serif); font-weight: 300; font-size: 11cqw; line-height: 0.8; letter-spacing: -0.02em; color: #fff; text-shadow: var(--shade-hero); margin-top: -0.6cqw; }
+  .cover--mirror .hero-note { font-family: 'bebas-neue-pro-expanded', var(--font-display); font-weight: 400; text-transform: uppercase; letter-spacing: 0.1em; font-size: 2.6cqw; color: var(--gold-hero); text-shadow: var(--shade-hero); margin-top: 1.6cqw; }
+  .cover--mirror .bl { display: inline-block; width: 0; height: 0; }
+  /* Between us: two hot-rod red dots in the dateline. Made by Tony and Jarvis. */
+  .cover--mirror .arc { color: #c8141f; font-size: 1.5em; line-height: 0; vertical-align: -0.12em; }
+  /* over the shaded shirt the gold reads darker than the masthead, so the hero's gold is lifted a touch and its shadow eased */
+  .cover--mirror .hero { --gold-hero: #c9a865; --shade-hero: 0 0.15cqw 0.9cqw rgb(0 0 0 / 0.35); }
+  /* the shirt is pale: a low veil of shade lets the gold and white type hold, as a printer would burn the corner in */
+  .cover--mirror .veil { position: absolute; inset: 0; z-index: 2; background: linear-gradient(to top, rgb(0 0 0 / 0.66) 0%, rgb(0 0 0 / 0.5) 28%, rgb(0 0 0 / 0.28) 40%, rgb(0 0 0 / 0) 58%); }
+
+  /* B — Alyx, in the EGO dummy's colours */
+  .cover--alyx { --mint: #e8eed8; --grey: #e2e2e2; --shade: 0 0.25cqw 1.4cqw rgb(0 0 0 / 0.45); color: #fff; background: #c9b78f; }
+  .cover--alyx .mast { left: 5cqw; right: 5cqw; top: 6cqw; color: var(--mint); opacity: 0.95; }
+  .cover--alyx .dateline { left: 5cqw; top: 2cqw; color: #2a2620; font-family: 'bebas-neue-pro', var(--font-display); font-weight: 500; font-size: 2.4cqw; letter-spacing: 0.12em; }
+  .cover--alyx .bl { display: inline-block; width: 0; height: 0; }
+  .cover--alyx .lines { right: 4cqw; top: 40cqw; width: 40cqw; text-align: right; }
+  .cover--alyx .lines p { margin: 0; }
+  .cover--alyx .tag { display: inline-block; background: var(--mint); color: #3b3a2e; font-family: var(--font-sans); font-size: 2.1cqw; letter-spacing: 0.06em; padding: 0.3cqw 1.4cqw; min-width: 12cqw; text-align: center; margin-bottom: 1.6cqw; }
+  .cover--alyx .kick { font-family: var(--font-display); text-transform: uppercase; font-size: 5cqw; line-height: 0.95; color: #fff; text-shadow: var(--shade); }
+  .cover--alyx .ctx { font-family: 'bebas-neue-pro', var(--font-display); font-weight: 400; text-transform: uppercase; letter-spacing: 0.04em; font-size: 3.3cqw; line-height: 1; color: #fff; text-shadow: var(--shade); margin: 0.4cqw 0 2.4cqw !important; }
+  .cover--alyx .pale { margin-bottom: 1cqw !important; }
+  .cover--alyx .pale span { display: inline-block; background: var(--grey); color: #2f2d27; font-family: var(--font-display); text-transform: uppercase; font-size: 3.6cqw; line-height: 1; padding: 0.6cqw 1.2cqw 0.3cqw; }
+  .cover--alyx .hero { left: 5cqw; top: 86.43cqw; width: 80cqw; } /* name's baseline on the bottom of the mint + box */
+  .cover--alyx .hero-name { font-family: var(--font-display); text-transform: uppercase; font-size: 7cqw; line-height: 1; letter-spacing: 0.04em; color: var(--mint); text-shadow: var(--shade); }
+  .cover--alyx .hero-serif { font-family: var(--font-serif); font-weight: 300; font-size: 11cqw; line-height: 0.8; letter-spacing: -0.02em; color: #fff; text-shadow: var(--shade); margin-top: -0.6cqw; }
+  .cover--alyx .hero-note { font-family: 'bebas-neue-pro-expanded', var(--font-display); font-weight: 400; text-transform: uppercase; letter-spacing: 0.1em; font-size: 2.6cqw; color: var(--mint); text-shadow: var(--shade); margin-top: 1.6cqw; }
+</style>
