@@ -5,7 +5,7 @@ import Footer from '../components/Footer.astro';
 import { Image } from 'astro:assets';
 import Logo from '../assets/tillier-logo.svg';
 import portrait from '../assets/editor/portrait-editorial.jpg';
-import paperCover from '../assets/covers/ego-dummy-101.jpg'; // placeholder until the Tillier Journal cover exists
+import Cover from '../components/Cover.astro';
 import { issue, coverStory, stories, allStories, storyHref } from '../data/issue';
 
 const contents = allStories;
@@ -191,17 +191,11 @@ const sections = [...new Set(contents.map((s) => s.section))];
     <!-- Paper edition: the magazine advertising itself -->
     <aside id="paper" class="paper" aria-label="The paper edition">
       <div class="paper-covers">
-        <div class="paper-stack" data-reveal="fade">
-          <div class="paper-back paper-back--2" aria-hidden="true"><Logo /></div>
-          <div class="paper-back paper-back--1" aria-hidden="true"><Logo /></div>
-          <Image
-            src={paperCover}
-            alt="Placeholder cover for the paper edition"
-            class="paper-front"
-            widths={[360, 720]}
-            sizes="(max-width: 800px) 60vw, 26vw"
-          />
+        <div class="paper-pair" data-reveal="fade" data-cover-pair>
+          <button class="paper-cover is-front" type="button" aria-label="Show the mirror cover"><Cover edition="mirror" /></button>
+          <button class="paper-cover is-back" type="button" aria-label="Show the Alyx cover"><Cover edition="alyx" /></button>
         </div>
+        <p class="label paper-caption">Issue 01, in two covers</p>
       </div>
       <div class="paper-offer">
         <p class="label kicker">The paper edition</p>
@@ -602,37 +596,48 @@ const sections = [...new Set(contents.map((s) => s.section))];
     place-items: center;
     padding: 96px var(--gutter);
   }
-  .paper-stack {
+  /* The two companion covers of issue 01: one squarely behind the other, offset right so its edge shows.
+     They trade places once the reader is halfway into the offer, and on hover. */
+  .paper-pair {
     position: relative;
-    width: min(30vw, 400px);
-    aspect-ratio: 6667 / 9063;
+    width: min(32vw, 440px);
+    aspect-ratio: 4 / 5;
+    margin-right: 15%;
   }
-  /* A neat pile of back issues, not a fan */
-  .paper-front,
-  .paper-back {
+  .paper-cover {
+    all: unset;
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
-    box-shadow: 0 24px 48px rgb(17 17 17 / 0.18);
+    display: block;
+    cursor: pointer;
+    box-shadow: 0 24px 48px rgb(17 17 17 / 0.22);
+    /* An even ease in and out, with the stacking order flipping exactly halfway, where the two covers
+       meet on top of each other, so the one coming forward slides out over the other without a pop */
+    transition:
+      transform 0.7s cubic-bezier(0.65, 0, 0.35, 1),
+      filter 0.7s cubic-bezier(0.65, 0, 0.35, 1),
+      z-index 0s linear 0.35s;
   }
-  .paper-front {
-    object-fit: cover;
+  .paper-cover.is-front {
+    z-index: 2;
+    transform: translate(0, 0);
   }
-  .paper-back {
-    display: grid;
-    align-items: start;
-    padding: 9% 10%;
-    background: var(--ink);
-    color: var(--paper);
+  .paper-cover.is-back {
+    z-index: 1;
+    transform: translate(16%, 0);
+    filter: brightness(0.92);
   }
-  .paper-back--1 {
-    transform: translate(4%, -3%);
+  .paper-cover:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 6px;
   }
-  .paper-back--2 {
-    transform: translate(8%, -6%);
-    background: var(--accent);
-    color: var(--ink);
+  @media (prefers-reduced-motion: reduce) {
+    .paper-cover { transition: none; }
+  }
+  .paper-caption {
+    margin-top: 90px;
+    color: var(--ink-soft);
+    text-align: center;
   }
   .paper-offer {
     display: grid;
@@ -727,11 +732,18 @@ const sections = [...new Set(contents.map((s) => s.section))];
     .paper {
       grid-template-columns: minmax(0, 1fr);
     }
-    .paper-stack {
-      width: 62vw;
+    .paper-pair {
+      width: 70vw;
+      margin-top: 24px;
     }
+    .paper-caption {
+      margin-top: 30px;
+    }
+    /* On phones the covers sit in a black frame that runs straight into the offer below, so they read as one block */
     .paper-covers {
-      padding: 56px 24px 72px;
+      padding: 36px 24px 26px;
+      border: 3px solid var(--ink); /* matches the section bar's rule */
+      border-bottom: 0;
     }
     .contents-list a {
       grid-template-columns: minmax(0, 1fr) 36px;

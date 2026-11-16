@@ -167,9 +167,42 @@ function reveals() {
   });
 }
 
+// The two covers of issue 01 trade places: once when the reader is halfway into the
+// paper-edition offer, and whenever the back cover is hovered (or tapped).
+function coverPair() {
+  const pair = document.querySelector<HTMLElement>('[data-cover-pair]');
+  if (!pair) return;
+  const covers = Array.from(pair.querySelectorAll<HTMLElement>('.paper-cover'));
+  const swap = () => covers.forEach((c) => {
+    c.classList.toggle('is-front');
+    c.classList.toggle('is-back');
+  });
+  // After a hover swap the other cover slides in under the pointer; wait until the pointer
+  // leaves the pair before hover can swap again, so the covers don't ping-pong.
+  let armed = true;
+  pair.addEventListener('mouseleave', () => { armed = true; });
+  covers.forEach((c) => {
+    c.addEventListener('mouseenter', () => {
+      if (armed && c.classList.contains('is-back')) { armed = false; swap(); }
+    });
+    // A tap on either cover swaps them on touch screens; with a mouse, a click on the back cover does.
+    c.addEventListener('click', (e) => {
+      const touch = (e as PointerEvent).pointerType === 'touch' || matchMedia('(hover: none)').matches;
+      if (touch || c.classList.contains('is-back')) swap();
+    });
+  });
+  ScrollTrigger.create({
+    trigger: pair.closest('.paper') ?? pair,
+    start: 'center center',
+    once: true,
+    onEnter: swap,
+  });
+}
+
 export function initMotion() {
   setDateline();
   masthead();
   sectionFilter();
+  coverPair();
   if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) reveals();
 }
