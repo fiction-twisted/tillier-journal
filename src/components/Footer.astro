@@ -6,13 +6,17 @@ import Logo from '../assets/tillier-logo.svg';
   <div class="footer-cta">
     <p class="label kicker">Correspondence</p>
     <h2 class="footer-title" data-reveal="lines">Commissions, collaborations &amp; correspondence</h2>
-    <p class="label footer-contact">Contact details to come</p>
+    <a class="footer-email" href="mailto:sigvetillier@gmail.com">sigvetillier@gmail.com</a>
+    <ul class="label footer-links">
+      <li><a href="https://www.instagram.com/sigvetillier/" target="_blank" rel="noopener">Instagram ↗</a></li>
+      <li><a href="https://www.linkedin.com/in/sigve-tillier-20b435386/" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+    </ul>
   </div>
   <dl class="colophon label">
     <div><dt>Editor-in-chief</dt><dd>Sigve Tillier</dd></div>
     <div><dt>Art direction</dt><dd>Sigve Tillier</dd></div>
-    <div><dt>Typeset in</dt><dd>Bebas Neue, IvyJournal &amp; Century Gothic</dd></div>
-    <div><dt>Printed on</dt><dd>Astro &amp; Sanity</dd></div>
+    <div><dt>Typeset in</dt><dd>Bebas Neue (Pro), IvyJournal &amp; Century Gothic</dd></div>
+    <div><dt>Printed on</dt><dd>Astro</dd></div>
   </dl>
   <div class="footer-logo" aria-hidden="true"><Logo /></div>
 </footer>
@@ -38,9 +42,36 @@ import Logo from '../assets/tillier-logo.svg';
     line-height: 0.9;
     letter-spacing: 0.005em;
   }
-  .footer-contact {
-    margin-top: 28px;
-    color: rgb(246 243 238 / 0.6);
+  .footer-email {
+    display: inline-block;
+    margin-top: 36px;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(26px, 3.4vw, 48px);
+    color: var(--paper);
+    text-decoration: none;
+    border-bottom: 1px solid rgb(246 243 238 / 0.35);
+    transition: color 0.3s, border-color 0.3s;
+  }
+  .footer-email:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .footer-links {
+    display: flex;
+    gap: 28px;
+    margin: 24px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .footer-links a {
+    color: rgb(246 243 238 / 0.7);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .footer-links a:hover {
+    color: var(--accent);
   }
   .colophon {
     display: grid;
