@@ -1,0 +1,90 @@
+---
+// Faux fragrance advertisement, after Dior Sauvage and YSL MYSLF: a close, low-lit portrait, the bottle in the
+// lower corner, a widely spaced serif wordmark and the house name on a paper strip at the foot of the page.
+// Sizes itself to its container's width (type in container units).
+import { Image } from 'astro:assets';
+import Logo from '../assets/tillier-logo.svg';
+import photo from '../assets/ad/cloak-photo-bw-final4.jpg';
+import bottle from '../assets/ad/cloak-bottle.png';
+---
+
+<article class="perfume" aria-label="Advertisement: Cloak, eau de parfum by Tillier Journal">
+  <div class="photo">
+    <Image src={photo} alt="Black-and-white portrait of Sigve Tillier in sunglasses, lifting a glass" widths={[700, 1100, 1600]} sizes="(max-width: 800px) 92vw, 46vw" />
+  </div>
+  <div class="glow" aria-hidden="true"></div>
+  <img class="bottle" src={bottle.src} alt="" width={bottle.width} height={bottle.height} loading="lazy" />
+
+  <div class="words">
+    <p class="name">Cloak</p>
+    <p class="tag"><em>Indulge in self-aviation</em></p>
+    <p class="kind">Eau de parfum</p>
+  </div>
+
+  <footer class="house">
+    <span class="mark"><Logo /></span>
+  </footer>
+</article>
+
+<style>
+  .perfume {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    container-type: inline-size;
+    background: #1a0b08;
+  }
+  .perfume > * { position: absolute; }
+  /* cqw resolves against the page on the article itself, so the scale is set on the children */
+  .perfume > :not(img) { font-size: 3.2cqw; }
+
+  .photo { inset: 0 0 15% 0; }
+  .photo :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; display: block; }
+
+  /* a little warm light pooling round the bottle, so it sits in the room rather than on it */
+  .glow {
+    right: 0; bottom: 15%; width: 55%; height: 45%;
+    background: radial-gradient(60% 55% at 68% 70%, rgb(255 190 110 / 0.14), transparent 70%),
+      linear-gradient(to top, rgb(10 4 2 / 0.55), transparent 55%);
+  }
+  .bottle {
+    right: 6cqw;
+    bottom: 21cqw; /* stands just above the paper strip (15% of the page = 18.75cqw) */
+    width: 20cqw;
+    height: auto;
+    /* a tight contact shadow and a long, soft one falling away to the lower left */
+    filter: drop-shadow(0.4cqw 0.6cqw 0.5cqw rgb(0 0 0 / 0.75)) drop-shadow(-2.5cqw 3cqw 3.5cqw rgb(0 0 0 / 0.6));
+  }
+
+  .words { left: 6cqw; top: 6cqw; color: #f4ede2; text-shadow: 0 0.3cqw 1.6cqw rgb(0 0 0 / 0.45); }
+  .name {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: 11.5cqw;
+    line-height: 0.85;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-right: -0.18em;
+  }
+  .tag { font-family: var(--font-serif); font-size: 3.6cqw; margin-top: 2.4cqw; }
+  .kind {
+    font-family: 'bebas-neue-pro-expanded', var(--font-display);
+    font-weight: 400;
+    font-size: 2.1cqw;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    margin-top: 1.6cqw;
+    color: #d9b97a;
+  }
+
+  /* the house, on a paper strip at the foot of the page, as Dior and YSL sign theirs */
+  .house {
+    left: 0; right: 0; bottom: 0; height: 15%;
+    display: grid;
+    place-items: center;
+    background: var(--paper, #f6f3ee);
+    color: var(--ink, #111);
+  }
+  .mark { width: 34cqw; }
+  .mark :global(svg) { width: 100%; height: auto; display: block; }
+</style>

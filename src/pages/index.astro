@@ -6,6 +6,7 @@ import { Image } from 'astro:assets';
 import Logo from '../assets/tillier-logo.svg';
 import portrait from '../assets/editor/portrait-editorial.jpg';
 import Cover from '../components/Cover.astro';
+import PerfumeAd from '../components/PerfumeAd.astro';
 import { issue, coverStory, stories, allStories, storyHref } from '../data/issue';
 
 const contents = allStories;
@@ -129,16 +130,8 @@ const sections = [...new Set(contents.map((s) => s.section))];
     <!-- Faux advertisement -->
     <aside class="ad" aria-label="Advertisement">
       <p class="label ad-flag">Advertisement</p>
-      <div class="ad-body">
-        <div class="bottle" data-reveal="fade" aria-hidden="true">
-          <span class="bottle-cap"></span>
-          <span class="bottle-glass"><Logo /></span>
-        </div>
-        <div class="ad-copy">
-          <h2 class="ad-title" data-reveal="lines">Eau de Journal</h2>
-          <p class="ad-tagline" data-reveal="fade"><em>For those who read between the lines.</em></p>
-          <p class="label ad-small" data-reveal="fade">Tillier — Bergen</p>
-        </div>
+      <div class="ad-page" data-reveal="fade">
+        <PerfumeAd />
       </div>
     </aside>
 
@@ -490,54 +483,15 @@ const sections = [...new Set(contents.map((s) => s.section))];
     color: var(--paper);
     padding: 28px var(--gutter) 120px;
   }
+  .ad-page {
+    width: min(760px, 92vw);
+    margin: 40px auto 0;
+    box-shadow: 0 30px 60px rgb(0 0 0 / 0.25);
+  }
   .ad-flag {
     text-align: center;
     color: rgb(246 243 238 / 0.5);
   }
-  .ad-body {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    align-items: center;
-    gap: var(--gutter);
-    max-width: 1100px;
-    margin: 96px auto 0;
-  }
-  .bottle {
-    justify-self: center;
-    display: grid;
-    justify-items: center;
-  }
-  .bottle-cap {
-    width: 64px;
-    height: 34px;
-    border-radius: 999px;
-    background: var(--accent);
-  }
-  .bottle-glass {
-    width: 220px;
-    height: 300px;
-    margin-top: 6px;
-    display: grid;
-    place-items: center;
-    padding: 0 34px;
-    border: 1px solid rgb(246 243 238 / 0.35);
-    background: linear-gradient(160deg, rgb(255 255 255 / 0.08), rgb(255 255 255 / 0.01));
-    color: var(--paper);
-  }
-  .ad-title {
-    font-size: clamp(56px, 7vw, 112px);
-    font-style: italic;
-  }
-  .ad-tagline {
-    margin-top: 18px;
-    font-size: 22px;
-    color: rgb(246 243 238 / 0.75);
-  }
-  .ad-small {
-    margin-top: 40px;
-    color: var(--accent);
-  }
-
   /* Editor */
   .editor {
     display: grid;
@@ -735,7 +689,6 @@ const sections = [...new Set(contents.map((s) => s.section))];
     }
     .contents,
     .stories,
-    .ad-body,
     .editor,
     .paper {
       grid-template-columns: minmax(0, 1fr);
@@ -769,10 +722,6 @@ const sections = [...new Set(contents.map((s) => s.section))];
     .contents-page {
       grid-row: 1 / span 3;
       grid-column: 2;
-    }
-    .bottle-glass {
-      width: 170px;
-      height: 230px;
     }
   }
 </style>
