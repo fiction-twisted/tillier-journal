@@ -1,0 +1,155 @@
+---
+// Square cover for the Spotify playlist "Issue 01: The Soundtrack", the subscription gift.
+// Sizes itself to its container (type in container units), so the same markup serves the lab and the export.
+import Logo from '../assets/tillier-logo.svg';
+import oil from '../assets/playlist/oil.jpg';
+
+interface Props {
+  variant: 'masthead' | 'oil' | 'record' | 'vinyl';
+  dark?: boolean;   // vinyl on black instead of paper
+}
+const { variant, dark = false } = Astro.props;
+---
+
+<article class:list={['pc', `pc--${variant}`, { 'pc--dark': dark }]} aria-label="Cover for the playlist Issue 01: The Soundtrack">
+  {variant === 'oil' && <img class="bg" src={oil.src} alt="" />}
+  {variant === 'record' && <div class="disc" aria-hidden="true"></div>}
+  {variant === 'vinyl' && (
+    <div class="plate" aria-hidden="true">
+      <img src={oil.src} alt="" />
+      <span class="grooves"></span>
+      <span class="label-disc"></span>
+    </div>
+  )}
+
+  <div class="inner">
+    <p class="top label">{variant === 'record' ? 'Issue 01' : <>Issue 01 <span>·</span> Autumn 2026 <span>·</span> Bergen</>}</p>
+    {variant === 'vinyl' ? (
+      <div class="centre">
+        <div class="mast"><Logo /></div>
+        <p class="title"><em>The Soundtrack</em></p>
+      </div>
+    ) : (
+      <>
+        <div class="mast"><Logo /></div>
+        <p class="title"><em>The Soundtrack</em></p>
+      </>
+    )}
+    <p class="foot label">{variant === 'record' ? 'Side A · 18 tracks' : '18 tracks · 1 hr 15 min'}</p>
+  </div>
+</article>
+
+<style>
+  .pc {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    container-type: inline-size;
+    background: var(--paper, #f6f3ee);
+    color: var(--ink, #111);
+  }
+  .pc > *, .pc .inner { position: absolute; }
+  .bg { inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .inner { inset: 0; display: grid; place-items: center; align-content: center; text-align: center; }
+
+  .label {
+    font-family: var(--font-sans);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin: 0;
+  }
+  .top { position: absolute; top: 7cqw; left: 0; right: 0; font-size: 2.1cqw; }
+  .top span { margin: 0 0.6em; }
+  .foot { position: absolute; bottom: 7cqw; left: 0; right: 0; font-size: 2.1cqw; }
+  .mast { width: 72cqw; }
+  .mast :global(svg) { width: 100%; height: auto; display: block; }
+  .title {
+    margin: 4.5cqw 0 0;
+    font-family: var(--font-serif);
+    font-size: 9.5cqw;
+    line-height: 1;
+    letter-spacing: 0.01em;
+  }
+
+  /* masthead: paper, black mark, a gold hairline between mark and title */
+  .pc--masthead .title { padding-top: 4.5cqw; border-top: 0.35cqw solid var(--accent, #b08d4a); width: 58cqw; }
+
+  /* oil: the gold-veined black oil from the Cloak ad, mark and type in cream */
+  .pc--oil { background: #0b0907; color: #f4ede2; }
+  .pc--oil .inner { background: radial-gradient(75% 60% at 50% 50%, rgb(5 4 3 / 0.62), rgb(5 4 3 / 0.25) 80%), linear-gradient(rgb(5 4 3 / 0.55), transparent 18% 82%, rgb(5 4 3 / 0.55)); }
+  .pc--oil .mast, .pc--oil .title { text-shadow: 0 0.4cqw 2cqw rgb(0 0 0 / 0.5); filter: drop-shadow(0 0.4cqw 1.6cqw rgb(0 0 0 / 0.55)); }
+  .pc--oil .top, .pc--oil .foot { color: #d9b97a; }
+
+  /* record: a black disc with fine grooves, the magazine on a paper centre label */
+  .pc--record { background: #0b0907; }
+  .disc {
+    inset: 3cqw;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle, transparent 0 31cqw, rgb(255 255 255 / 0.05) 31.2cqw, transparent 31.6cqw),
+      repeating-radial-gradient(circle, #121010 0 0.28cqw, #0a0909 0.28cqw 0.56cqw),
+      #0a0909;
+    box-shadow: inset 0 0 0 0.3cqw #1b1817;
+  }
+  .disc::after {   /* a soft band of light across the grooves */
+    content: '';
+    position: absolute; inset: 0; border-radius: 50%;
+    background: conic-gradient(from 30deg, transparent 0 8%, rgb(255 240 210 / 0.07) 13%, transparent 20% 58%, rgb(255 240 210 / 0.05) 63%, transparent 70%);
+  }
+  .pc--record .inner {
+    inset: 21cqw;
+    border-radius: 50%;
+    background: var(--paper, #f6f3ee);
+    align-content: center;
+  }
+  .pc--record .inner::after {   /* spindle hole */
+    content: ''; position: absolute; left: 50%; top: 50%; width: 1.6cqw; height: 1.6cqw; margin: -0.8cqw 0 0 -0.8cqw;
+    border-radius: 50%; background: #0b0907;
+  }
+  .pc--record .mast { width: 40cqw; margin-top: -6cqw; }
+  .pc--record .title { font-size: 5.2cqw; margin-top: 9cqw; }
+  .pc--record .top { top: 6.5cqw; font-size: 1.5cqw; color: var(--accent, #b08d4a); }
+  .pc--record .foot { bottom: 6.5cqw; font-size: 1.5cqw; }
+
+  /* vinyl: the record's plate is the black oil, on paper; the masthead cover's top and bottom lines frame it */
+  .plate {
+    left: 3cqw; top: 3cqw; width: 94cqw; height: 94cqw;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 1.2cqw 3cqw rgb(0 0 0 / 0.28), 0 0.2cqw 0.5cqw rgb(0 0 0 / 0.3);
+  }
+  .plate > * { position: absolute; inset: 0; border-radius: 50%; }
+  .plate img { width: 100%; height: 100%; object-fit: cover; }
+  .grooves {
+    background:
+      /* the lead-in and run-out rims, and fine concentric grooves */
+      radial-gradient(circle, transparent 0 44.6cqw, rgb(255 240 210 / 0.08) 44.8cqw, transparent 45.2cqw),
+      /* the outer tracks sit darker, so the issue and track lines read on them */
+      radial-gradient(circle, transparent 0 32cqw, rgb(5 4 3 / 0.6) 34.5cqw 44cqw, rgb(5 4 3 / 0.35) 46cqw, transparent 47cqw),
+      radial-gradient(circle, transparent 0 29.2cqw, rgb(0 0 0 / 0.35) 29.4cqw, transparent 30.4cqw),
+      repeating-radial-gradient(circle, rgb(0 0 0 / 0.22) 0 0.16cqw, transparent 0.16cqw 0.42cqw),
+      /* soft bands of light across the grooves */
+      conic-gradient(from 35deg, transparent 0 7%, rgb(255 235 200 / 0.14) 12%, transparent 19% 57%, rgb(255 235 200 / 0.1) 62%, transparent 69%);
+    mix-blend-mode: normal;
+  }
+  .plate .label-disc {
+    inset: 18cqw;
+    background: var(--paper, #f6f3ee);
+    box-shadow: 0 0 0 0.25cqw rgb(0 0 0 / 0.35);
+  }
+  .plate .label-disc::after {   /* spindle hole */
+    content: ''; position: absolute; left: 50%; top: 50%; width: 1.4cqw; height: 1.4cqw; margin: -0.7cqw 0 0 -0.7cqw;
+    border-radius: 50%; background: #0b0907;
+  }
+  /* on black, the disc is lifted off the background by a faint rim of light rather than a shadow */
+  .pc--vinyl.pc--dark { background: #0b0907; }
+  .pc--vinyl.pc--dark .plate { box-shadow: 0 0 0 0.18cqw rgb(255 235 200 / 0.14), 0 0 4cqw rgb(255 210 150 / 0.06); }
+  .pc--vinyl .centre { display: grid; justify-items: center; }
+  .pc--vinyl .mast { width: 40cqw; margin-bottom: 9cqw; }
+  .pc--vinyl .title { font-size: 5.2cqw; margin: 0; }
+  /* the issue and track lines move onto the oil, in gold, just inside the rim */
+  .pc--vinyl .top, .pc--vinyl .foot { color: #d9b97a; text-shadow: 0 0.2cqw 1cqw rgb(0 0 0 / 0.85); }
+  /* the lines are an overlay on the cover, set at the masthead cover's size; they may run past the rim */
+  .pc--vinyl .top { top: 9.2cqw; }
+  .pc--vinyl .foot { bottom: 9.2cqw; }
+</style>

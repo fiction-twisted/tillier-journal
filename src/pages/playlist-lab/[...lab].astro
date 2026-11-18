@@ -1,0 +1,56 @@
+---
+// Draft page for the Spotify playlist cover, served at /playlist-lab in the dev server only:
+// the production build generates no page here, so it never reaches the live site.
+// ?only=<variant>&px=<size> shows one cover alone at an exact pixel size, for exporting.
+import Base from '../../layouts/Base.astro';
+import PlaylistCover from '../../components/PlaylistCover.astro';
+
+export function getStaticPaths() {
+  return import.meta.env.DEV ? [{ params: { lab: undefined } }] : [];
+}
+const variants = [
+  { id: 'vinyl', v: 'vinyl' },
+  { id: 'vinyl-black', v: 'vinyl', dark: true },
+  { id: 'masthead', v: 'masthead' },
+  { id: 'oil', v: 'oil' },
+  { id: 'record', v: 'record' },
+] as const;
+---
+
+<Base title="Playlist lab — Tillier Journal" noindex>
+  <main class="lab">
+    {variants.map((x) => (
+      <figure class="slot" data-variant={x.id}>
+        <PlaylistCover variant={x.v} dark={'dark' in x && x.dark} />
+        <figcaption>{x.id.replace('-', ' on ')}</figcaption>
+      </figure>
+    ))}
+  </main>
+</Base>
+
+<script is:inline>
+  const q = new URLSearchParams(location.search);
+  const only = q.get('only'), px = q.get('px');
+  if (only) {
+    document.documentElement.classList.add('export');
+    document.querySelectorAll('.slot').forEach((s) => { if (s.dataset.variant !== only) s.remove(); });
+    if (px) document.documentElement.style.setProperty('--px', px + 'px');
+  }
+</script>
+
+<style>
+  .lab {
+    display: flex; flex-wrap: wrap; gap: 40px; justify-content: center; align-items: flex-start;
+    padding: 48px 24px 96px; background: #d9d4cb; min-height: 100vh;
+  }
+  .slot { width: min(420px, 92vw); margin: 0; }
+  .slot :global(.pc) { box-shadow: 0 24px 48px rgb(0 0 0 / 0.25); }
+  figcaption { margin-top: 12px; font: 12px/1.4 var(--font-sans, sans-serif); letter-spacing: 0.12em; text-transform: uppercase; color: #333; }
+  /* export mode: one cover, nothing else, at an exact size from the top-left corner */
+  :global(html.export) :global(header), :global(html.export) :global(footer.site-footer) { display: none !important; }
+  :global(html.export) .lab { padding: 0; background: none; min-height: 0; display: block; }
+  :global(html.export) .slot { width: var(--px, 2400px); }
+  :global(html.export) .slot :global(.pc) { box-shadow: none; }
+  :global(html.export) figcaption { display: none; }
+  :global(html.export) :global(astro-dev-toolbar) { display: none !important; }
+</style>
