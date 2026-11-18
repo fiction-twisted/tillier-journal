@@ -1,0 +1,36 @@
+---
+// Draft page for comparing directions for the Cloak ad. Not linked from the site.
+import Base from '../layouts/Base.astro';
+import PerfumeAd from '../components/PerfumeAd.astro';
+import midnight from '../assets/ad/cloak-fabric-midnight.jpg';
+const alt = 'A figure wrapped in taut fabric, one hand reaching out from under it';
+---
+
+<Base title="Ad lab — Tillier Journal" noindex>
+  <main class="lab">
+    <figure class="slot">
+      <PerfumeAd art={midnight} front={null} alt={alt} side="left" sheen="40 64 130" notes={[]} />
+      <figcaption>Midnight blue</figcaption>
+    </figure>
+    <figure class="slot">
+      <PerfumeAd />
+      <figcaption>Materials (on the front page)</figcaption>
+    </figure>
+  </main>
+</Base>
+
+<style>
+  .lab {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 48px;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 48px 24px 96px;
+    background: #d9d4cb;
+    min-height: 100vh;
+  }
+  .slot { width: min(560px, 92vw); margin: 0; }
+  .slot :global(.perfume) { box-shadow: 0 30px 60px rgb(0 0 0 / 0.25); }
+  figcaption { margin-top: 14px; font: 12px/1.4 var(--font-sans, sans-serif); letter-spacing: 0.12em; text-transform: uppercase; color: #333; }
+</style>

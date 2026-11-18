@@ -14,6 +14,8 @@ export const issue = {
   number: '01',
   season: 'Autumn 2026',
   city: 'Bergen',
+  /** The subscription gift: a public Spotify playlist. Leave empty until it's curated. */
+  playlist: 'https://open.spotify.com/playlist/4oC8DhRxrPBGOQcYzTCyDd',
 };
 
 export const coverStory: Story = bsk26;

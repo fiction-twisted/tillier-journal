@@ -199,12 +199,14 @@ const sections = [...new Set(contents.map((s) => s.section))];
         </p>
         <ul class="paper-perks" data-reveal="fade">
           <li>Starting issue: No. {issue.number}</li>
-          <li>One designer, undivided attention</li>
+          <li>First look at every new issue</li>
           <li>Full access to the archive</li>
-          <li>Replies within two working days</li>
+          <li>No inbox required</li>
         </ul>
-        <p class="label paper-gift">Free gift included — a CV, in print or PDF</p>
-        <a href="#subscribe" class="label paper-button">Subscribe now</a>
+        <p class="label paper-gift">Free gift included — the Issue {issue.number} soundtrack</p>
+        {issue.playlist
+          ? <a href={issue.playlist} class="label paper-button" target="_blank" rel="noopener">Subscribe now</a>
+          : <a href="#subscribe" class="label paper-button">Subscribe now</a>}
       </div>
     </aside>
   </main>

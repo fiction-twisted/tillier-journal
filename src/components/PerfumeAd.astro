@@ -1,24 +1,76 @@
 ---
-// Faux fragrance advertisement, after Dior Sauvage and YSL MYSLF: a close, low-lit portrait, the bottle in the
-// lower corner, a widely spaced serif wordmark and the house name on a paper strip at the foot of the page.
+// Faux fragrance advertisement, after Dior Sauvage and YSL MYSLF: four raw materials (sea, steel, charred wood, oil) in a
+// grid with the bottle standing where they meet, the notes set as a small ingredient list under the wordmark, a widely spaced serif wordmark and the house name on a paper strip at the foot of the page.
 // Sizes itself to its container's width (type in container units).
 import { Image } from 'astro:assets';
 import Logo from '../assets/tillier-logo.svg';
-import photo from '../assets/ad/cloak-photo-bw-final4.jpg';
+import photo from '../assets/ad/cloak-materials.jpg';
 import bottle from '../assets/ad/cloak-bottle.png';
+import type { ImageMetadata } from 'astro';
+
+// Defaults are the version on the front page; the ad lab passes other art to compare directions.
+interface Props {
+  art?: ImageMetadata;
+  front?: ImageMetadata | null;
+  alt?: string;
+  side?: 'left' | 'right' | 'center';   // where along the foot the bottle stands
+  sheen?: string;                   // colour of the light the art throws onto the glass
+  notes?: { text: string; icon: 'sea' | 'steel' | 'wood' | 'oil' }[];   // an ingredient list under the type, pictograms as bullets
+  bottleX?: number;                 // for a centred bottle: its left edge, in % of the page width
+}
+const {
+  art = photo,
+  front: frontArt = null,
+  alt = 'Four materials in a grid: dark sea, blackened steel, charred wood and black oil veined with gold',
+  side = 'center',
+  sheen = '230 170 80',
+  notes = [
+    { text: 'North sea', icon: 'sea' },
+    { text: 'Blackened steel', icon: 'steel' },
+    { text: 'Charred wood', icon: 'wood' },
+    { text: 'Black oil', icon: 'oil' },
+  ],
+  bottleX = 50,
+} = Astro.props;
+
+// fine line pictograms on a 16-unit grid, drawn square and geometric like the Tillier mark
+const icons: Record<string, string> = {
+  sea: 'M1 5.5c1.75-2 3.5-2 5.25 0s3.5 2 5.25 0 3.5-2 3.5-2M1 9.5c1.75-2 3.5-2 5.25 0s3.5 2 5.25 0 3.5-2 3.5-2M1 13.5c1.75-2 3.5-2 5.25 0s3.5 2 5.25 0 3.5-2 3.5-2',
+  steel: 'M2.5 2.5h11v2h-11zM2.5 11.5h11v2h-11zM7 4.5h2v7H7z',
+  wood: 'M8 14.5c-2.8 0-4.5-1.9-4.5-4.4 0-3.1 3-4.6 3-8.6 2.2 1.6 3.6 3.4 3.6 5.6.9-.5 1.4-1.4 1.5-2.3 1.1 1.2 1.9 2.9 1.9 5 0 2.8-2.1 4.7-5.5 4.7z',
+  oil: 'M8 1.5c2.6 3.6 4.5 6.1 4.5 8.6a4.5 4.5 0 0 1-9 0c0-2.5 1.9-5 4.5-8.6zM6 10.5a2 2 0 0 0 2 2',
+};
 ---
 
-<article class="perfume" aria-label="Advertisement: Cloak, eau de parfum by Tillier Journal">
+<article class:list={["perfume", `bottle-${side}`]} style={`--sheen: ${sheen}${bottleX ? `; --bottle-x: ${bottleX}cqw` : ''}`} aria-label="Advertisement: Cloak, eau de parfum by Tillier Journal">
   <div class="photo">
-    <Image src={photo} alt="Black-and-white portrait of Sigve Tillier in sunglasses, lifting a glass" widths={[700, 1100, 1600]} sizes="(max-width: 800px) 92vw, 46vw" />
+    <Image src={art} alt={alt} widths={[700, 1100, 1600]} sizes="(max-width: 800px) 92vw, 46vw" />
   </div>
   <div class="glow" aria-hidden="true"></div>
   <img class="bottle" src={bottle.src} alt="" width={bottle.width} height={bottle.height} loading="lazy" />
+  <!-- light from the art catching the near side of the glass, masked to the bottle's own shape -->
+  <div class="sheen" aria-hidden="true" style={`--bottle: url(${bottle.src}); aspect-ratio: ${bottle.width} / ${bottle.height}`}></div>
+  <!-- paint in front of the bottle: a strand across the glass and a few out-of-focus drops near the camera -->
+  {frontArt && (
+    <div class="front" aria-hidden="true">
+      <Image src={frontArt} alt="" widths={[700, 1100, 1600]} sizes="(max-width: 800px) 92vw, 46vw" />
+    </div>
+  )}
 
   <div class="words">
     <p class="name">Cloak</p>
     <p class="tag"><em>Indulge in self-aviation</em></p>
     <p class="kind">Eau de parfum</p>
+    {notes.length > 0 && (
+      <ul class="notes" aria-label="Notes">
+        {notes.map((n) => (
+          <li>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d={icons[n.icon]} /></svg>
+            <span>{n.text}</span>
+          </li>
+        ))}
+      </ul>
+    )}
   </div>
 
   <footer class="house">
@@ -39,7 +91,7 @@ import bottle from '../assets/ad/cloak-bottle.png';
   .perfume > :not(img) { font-size: 3.2cqw; }
 
   .photo { inset: 0 0 15% 0; }
-  .photo :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; display: block; }
+  .photo :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; display: block; }
 
   /* a little warm light pooling round the bottle, so it sits in the room rather than on it */
   .glow {
@@ -54,6 +106,63 @@ import bottle from '../assets/ad/cloak-bottle.png';
     height: auto;
     /* a tight contact shadow and a long, soft one falling away to the lower left */
     filter: drop-shadow(0.4cqw 0.6cqw 0.5cqw rgb(0 0 0 / 0.75)) drop-shadow(-2.5cqw 3cqw 3.5cqw rgb(0 0 0 / 0.6));
+  }
+
+  .sheen {
+    right: 6cqw;
+    bottom: 21cqw;
+    width: 20cqw;
+    background:
+      radial-gradient(70% 40% at 0% 30%, rgb(var(--sheen) / 0.55), transparent 70%),
+      linear-gradient(100deg, rgb(var(--sheen) / 0.4) 0%, rgb(var(--sheen) / 0.12) 25%, transparent 50%);
+    -webkit-mask: var(--bottle) center / 100% 100% no-repeat;
+    mask: var(--bottle) center / 100% 100% no-repeat;
+    mix-blend-mode: screen;
+    pointer-events: none;
+  }
+  /* bottle in the lower left: it, its light and the glow move across, and the light comes from the right */
+  .bottle-left .bottle, .bottle-left .sheen { right: auto; left: 6cqw; }
+  .bottle-left .sheen {
+    background:
+      radial-gradient(70% 40% at 100% 30%, rgb(var(--sheen) / 0.55), transparent 70%),
+      linear-gradient(260deg, rgb(var(--sheen) / 0.4) 0%, rgb(var(--sheen) / 0.12) 25%, transparent 50%);
+  }
+  .bottle-left .glow { right: auto; left: 0; transform: scaleX(-1); }
+  /* bottle centred at the foot, light reaching it from the right */
+  .bottle-center .bottle, .bottle-center .sheen { right: auto; left: var(--bottle-x, 40cqw); }
+  .bottle-center .glow { right: 22.5%; }
+  .bottle-center .sheen {
+    background:
+      radial-gradient(70% 40% at 100% 60%, rgb(var(--sheen) / 0.5), transparent 70%),
+      linear-gradient(260deg, rgb(var(--sheen) / 0.35) 0%, rgb(var(--sheen) / 0.1) 25%, transparent 50%);
+  }
+  /* the notes, set like an ingredient list: hairline above, small tracked caps, gold pictograms for bullets */
+  .notes {
+    list-style: none;
+    margin: 3.4cqw 0 0;
+    padding: 1.8cqw 0 0;
+    border-top: 1px solid rgb(217 185 122 / 0.45);
+    width: 27cqw;
+    display: grid;
+    gap: 1.15cqw;
+  }
+  .notes li { display: flex; align-items: center; gap: 1.5cqw; }
+  .notes svg {
+    width: 1.75cqw; height: 1.75cqw; flex: none;
+    fill: none; stroke: #d9b97a; stroke-width: 1.1; stroke-linejoin: miter; stroke-linecap: square;
+  }
+  .notes span {
+    font-family: var(--font-sans);
+    font-size: 1.3cqw;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: rgb(244 237 226 / 0.88);
+  }
+  .front { inset: 0 0 15% 0; pointer-events: none; }
+  .front :global(img) {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    /* the strand throws a soft shadow onto the glass behind it */
+    filter: drop-shadow(0.3cqw 0.5cqw 0.5cqw rgb(0 0 0 / 0.5));
   }
 
   .words { left: 6cqw; top: 6cqw; color: #f4ede2; text-shadow: 0 0.3cqw 1.6cqw rgb(0 0 0 / 0.45); }
