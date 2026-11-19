@@ -360,13 +360,18 @@ const typeset = (text: string) =>
     .block-type {
       grid-template-columns: minmax(0, 1fr);
     }
-    .block-palette {
+    /* two rows of two: the band grows with its rows (the short band too, or its second row spills under the next block) */
+    .block-palette,
+    .block-palette.short {
       grid-auto-flow: row;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       height: auto;
     }
     .swatch {
       min-height: 120px;
+    }
+    .block-palette.short .swatch {
+      min-height: 84px;
     }
     .block-pair,
     .block-trio,
