@@ -12,6 +12,20 @@ interface Props {
 const { masthead = false } = Astro.props;
 ---
 
+<!-- Opening titles: decided before the first paint, so nothing flashes. Once per visit, never with reduced motion. -->
+<script is:inline>
+  (function () {
+    var seen = false;
+    try { seen = sessionStorage.getItem('tj-intro') === '1'; } catch (e) {}
+    if (seen || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var root = document.documentElement;
+    root.classList.add('intro');
+    // safety net: if the intro script never starts, don't leave the page covered
+    setTimeout(function () { if (!window.__tjIntro) root.classList.remove('intro', 'intro-ready'); }, 2500);
+  })();
+</script>
+<div class="intro-curtain" aria-hidden="true"></div>
+
 <header class:list={['site-header', { 'is-scrolled': !masthead }]}>
   <p class="label header-date" data-today>{issue.city}</p>
   <nav class="header-nav label" aria-label="Main">
@@ -25,7 +39,26 @@ const { masthead = false } = Astro.props;
   <Logo />
 </a>
 
+<script>
+  import { initIntro } from '../scripts/intro';
+  initIntro();
+</script>
+
 <style>
+  /* the paper the intro plays on; above the page and header, below the logo */
+  .intro-curtain { display: none; }
+  :global(html.intro) .intro-curtain {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    background: var(--paper);
+  }
+  :global(html.intro) { overflow: hidden; }
+  :global(html.intro) .mast-logo { z-index: 31; pointer-events: none; }
+  /* until the script has set the logo up, keep it out of sight */
+  :global(html.intro:not(.intro-ready)) .mast-logo { visibility: hidden; }
+
   .site-header {
     position: fixed;
     inset: 0 0 auto 0;
