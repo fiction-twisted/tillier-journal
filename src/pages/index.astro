@@ -7,7 +7,7 @@ import Logo from '../assets/tillier-logo.svg';
 import portrait from '../assets/editor/portrait-editorial.jpg';
 import Cover from '../components/Cover.astro';
 import PerfumeAd from '../components/PerfumeAd.astro';
-import { issue, coverStory, stories, allStories, storyHref } from '../data/issue';
+import { issue, coverStory, stories, allStories, storyHref, roleOf } from '../data/issue';
 
 const contents = allStories;
 const coverImage = coverStory.coverImage ?? coverStory.hero;
@@ -15,9 +15,22 @@ const [lead, ...rest] = stories;
 const storyImage = (s: (typeof stories)[number]) => s.coverImage ?? s.hero;
 // Only list sections that actually have a story in this issue.
 const sections = [...new Set(contents.map((s) => s.section))];
+
+// Tells search engines who the site belongs to, so a search for the name finds it
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Sigve Tillier',
+  jobTitle: 'Art director and designer',
+  url: 'https://sigvetillier.com',
+  address: { '@type': 'PostalAddress', addressLocality: 'Bergen', addressCountry: 'NO' },
+  alumniOf: 'KMD, the Faculty of Fine Art, Music and Design, University of Bergen',
+  award: 'Diploma, Visueltprisen 2024',
+  sameAs: ['https://www.instagram.com/sigvetillier/', 'https://www.linkedin.com/in/sigve-tillier-20b435386/'],
+};
 ---
 
-<Base tone="white">
+<Base tone="white" title="Tillier Journal — the portfolio of Sigve Tillier" jsonLd={person}>
   <SiteHeader masthead />
 
   <section class="masthead" aria-label="Masthead">
@@ -56,8 +69,8 @@ const sections = [...new Set(contents.map((s) => s.section))];
         <p class="label kicker">Cover story <span>·</span> {coverStory.section}</p>
         <h2 class="cover-title" data-reveal="lines">{coverStory.title}</h2>
         <p class="standfirst" data-reveal="fade">{coverStory.standfirst}</p>
-        <p class="label byline" data-reveal="fade">
-          By Sigve Tillier <span>—</span> p. {coverStory.page}
+        <p class="label byline role" data-reveal="fade">
+          <span>Role</span> {roleOf(coverStory)} <span class="dash">—</span> p. {coverStory.page}
         </p>
         <span class="label read-more">Read the story →</span>
       </a>
@@ -73,7 +86,7 @@ const sections = [...new Set(contents.map((s) => s.section))];
               <a href={storyHref(s)}>
                 <span class="label">{s.section}</span>
                 <span class="contents-title">{s.title}</span>
-                <span class="label contents-client">{s.client}</span>
+                <span class="label contents-client">{s.client} <span class="sep">·</span> {roleOf(s)}</span>
                 <span class="contents-page">{String(s.page).padStart(2, '0')}</span>
               </a>
             </li>
@@ -101,6 +114,7 @@ const sections = [...new Set(contents.map((s) => s.section))];
           <h3 class="story-title" data-reveal="lines">{lead.title}</h3>
           <p class="standfirst" data-reveal="fade">{lead.standfirst}</p>
           <p class="label byline">{lead.client} <span>—</span> {lead.year}</p>
+          <p class="label role"><span>Role</span> {roleOf(lead)}</p>
         </a>
       </article>
       <div class="story-stack">
@@ -121,6 +135,7 @@ const sections = [...new Set(contents.map((s) => s.section))];
                 <h3 class="story-title" data-reveal="lines">{s.title}</h3>
                 <p class="standfirst" data-reveal="fade">{s.standfirst}</p>
                 <p class="label byline">{s.client} <span>—</span> {s.year}</p>
+                <p class="label role"><span>Role</span> {roleOf(s)}</p>
               </a>
             </article>
           ))
@@ -352,6 +367,29 @@ const sections = [...new Set(contents.map((s) => s.section))];
   }
   .byline {
     margin-top: 22px;
+  }
+  /* what Sigve Tillier did on the project, under the byline */
+  .role {
+    margin-top: 6px;
+    color: var(--ink-soft);
+  }
+  .role span {
+    margin-right: 0.6em;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  /* on the cover story the role shares the byline with the page number */
+  .byline.role {
+    margin-top: 22px;
+    color: var(--ink);
+  }
+  .role .dash {
+    margin: 0;
+    font-weight: 400;
+    color: inherit;
+  }
+  .contents-client .sep {
+    margin: 0 0.4em;
   }
   .img-inner :global(img) {
     width: 100%;

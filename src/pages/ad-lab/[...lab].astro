@@ -1,8 +1,12 @@
 ---
-// Draft page for comparing directions for the Cloak ad. Not linked from the site.
-import Base from '../layouts/Base.astro';
-import PerfumeAd from '../components/PerfumeAd.astro';
-import midnight from '../assets/ad/cloak-fabric-midnight.jpg';
+// Draft page for comparing directions for the Cloak ad. Served in the dev server only: the production build generates no page here.
+
+export function getStaticPaths() {
+  return import.meta.env.DEV ? [{ params: { lab: undefined } }] : [];
+}
+import Base from '../../layouts/Base.astro';
+import PerfumeAd from '../../components/PerfumeAd.astro';
+import midnight from '../../assets/ad/cloak-fabric-midnight.jpg';
 const alt = 'A figure wrapped in taut fabric, one hand reaching out from under it';
 ---
 

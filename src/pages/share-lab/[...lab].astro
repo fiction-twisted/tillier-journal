@@ -1,0 +1,77 @@
+---
+// The picture shown when the site is shared (LinkedIn, Slack, messages), served at /share-lab in the
+// dev server only. Exported at 1200 x 630 to src/assets/share/tillier-journal.jpg with headless Chrome.
+import Base from '../../layouts/Base.astro';
+import Cover from '../../components/Cover.astro';
+import Logo from '../../assets/tillier-logo.svg';
+
+export function getStaticPaths() {
+  return import.meta.env.DEV ? [{ params: { lab: undefined } }] : [];
+}
+---
+
+<Base title="Share lab — Tillier Journal" tone="white" noindex>
+  <main class="card">
+    <div class="text">
+      <p class="label meta"><span>Issue No. 01</span><span>Autumn 2026</span><span>Bergen, Norway</span></p>
+      <div class="logo"><Logo /></div>
+      <p class="label url">sigvetillier.com</p>
+    </div>
+    <div class="cover"><Cover edition="alyx" /></div>
+  </main>
+</Base>
+
+<style>
+  :global(astro-dev-toolbar) { display: none !important; }
+  :global(body) { margin: 0; background: #fff; }
+  .card {
+    width: 1200px;
+    height: 630px;
+    display: grid;
+    grid-template-columns: 1fr 504px;
+    background: #fff;
+    color: var(--ink);
+    overflow: hidden;
+  }
+  .text {
+    display: flex;
+    flex-direction: column;
+    padding: 48px 56px 44px;
+  }
+  .meta {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--ink);
+    font-size: 13px;
+  }
+  /* the mark centred between the issue line and the address */
+  .logo {
+    margin: auto 0;
+    padding-bottom: 12px;
+  }
+  .logo :global(svg) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  /* the address, with a rule running from it to the margin, answering the rule under the issue line */
+  .url {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .url::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--ink);
+  }
+  .cover {
+    width: 504px;
+    height: 630px;
+  }
+</style>

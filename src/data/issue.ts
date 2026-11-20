@@ -32,3 +32,6 @@ export const storyHref = (s: Story) => (s.blocks ? `/stories/${s.slug}` : `/#${s
 
 /** Every story in page order, used for routing and "continued on" links */
 export const allStories: Story[] = [coverStory, ...stories].sort((a, b) => a.page - b.page);
+
+/** What Sigve Tillier did on the project, from its details (personal work falls back to design) */
+export const roleOf = (s: Story) => s.details?.find((d) => d.label === 'Role')?.value ?? 'Design';

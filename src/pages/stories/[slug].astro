@@ -29,7 +29,13 @@ const themeVars = theme
   : '';
 ---
 
-<Base title={`${story.title} — Tillier Journal`} description={story.standfirst}>
+<Base
+  title={`${story.title} — Tillier Journal`}
+  description={story.standfirst}
+  type="article"
+  image={(story.coverImage ?? story.hero)?.src}
+  imageAlt={(story.coverImage ?? story.hero)?.alt}
+>
   <SiteHeader />
 
   <article class="story" style={themeVars}>

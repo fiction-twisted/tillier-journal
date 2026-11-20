@@ -1,7 +1,11 @@
 ---
-// Draft page for the Tillier Journal covers. Not linked from the site.
-import Base from '../layouts/Base.astro';
-import Cover from '../components/Cover.astro';
+// Draft page for the Tillier Journal covers. Served in the dev server only: the production build generates no page here.
+
+export function getStaticPaths() {
+  return import.meta.env.DEV ? [{ params: { lab: undefined } }] : [];
+}
+import Base from '../../layouts/Base.astro';
+import Cover from '../../components/Cover.astro';
 ---
 
 <Base title="Cover lab — Tillier Journal" noindex>
